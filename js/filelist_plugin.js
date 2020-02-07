@@ -44,14 +44,7 @@
                 var props = response.propStat[0].properties;
                 var foreignId = props[OC.Files.Client.PROPERTY_FOREIGN_ID];
                 if (foreignId) {
-                    foreignId = _.chain(foreignId).filter(function (xmlvalue) {
-                        return (xmlvalue.namespaceURI === OC.Files.Client.NS_OWNCLOUD && xmlvalue.nodeName.split(':')[1] === 'foreign-id');
-                    }).map(function (xmlvalue) {
-                        return xmlvalue.textContent || xmlvalue.text;
-                    }).value();
-                }
-                if (foreignId) {
-                    data.foreign_id = foreignId;
+                    data.foreignId = foreignId;
                 }
                 return data;
             });
