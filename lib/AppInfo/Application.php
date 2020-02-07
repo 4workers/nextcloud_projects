@@ -21,6 +21,7 @@ class Application extends App
         $eventDispatcher = $this->getContainer()->query(IEventDispatcher::class);
         $eventDispatcher->addListener('OCA\Files::loadAdditionalScripts', function() {
             script('projects', 'filelist_plugin');
+            style('projects', 'filelist');
         });
     }
 
