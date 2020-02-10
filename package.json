@@ -1,0 +1,27 @@
+{
+  "name": "projects",
+  "version": "1.0.0",
+  "description": "Projects folders in your nextcloud",
+  "main": "filelist_plugin.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4workers/nextcloud_projects.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/4workers/nextcloud_projects/issues"
+  },
+  "homepage": "https://github.com/4workers/nextcloud_projects#readme",
+  "devDependencies": {
+    "@nextcloud/eslint-plugin": "^1.1.0",
+    "eslint": "^6.8.0"
+  }
+}

@@ -1,0 +1,29 @@
+root: true
+
+extends:
+  - eslint:recommended
+
+env:
+  browser: true
+  amd: true
+  es6: true
+
+globals:
+  global: false
+  app: false
+  angular: false
+  $: false
+  _: false
+  escapeHTML: false
+  OC: false
+  OCA: false
+  OCP: false
+  t: false
+  oc_current_user: false
+  oc_requesttoken: false
+  Clipboard: false
+  oc_defaults: false
+
+parserOptions:
+  ecmaVersion: 6
+  sourceType: "module"
