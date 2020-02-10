@@ -45,6 +45,7 @@
                 var foreignId = props[OC.Files.Client.PROPERTY_FOREIGN_ID];
                 if (foreignId) {
                     data.foreignId = foreignId;
+                    data.icon = OCP.InitialState.loadState('projects', 'project-icon');
                 }
                 return data;
             });
