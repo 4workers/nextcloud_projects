@@ -15,4 +15,9 @@
     <dependencies>
         <nextcloud min-version="18" max-version="19"/>
     </dependencies>
+    <sabre>
+        <collections>
+            <collection>OCA\Projects\Sabre\RootCollection</collection>
+        </collections>
+    </sabre>
 </info>
