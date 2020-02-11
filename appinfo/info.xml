@@ -13,12 +13,6 @@
     <category>organization</category>
     <bugs>https://github.com/4workers/nextcloud_projects</bugs>
     <dependencies>
-        <nextcloud min-version="19" max-version="19"/>
+        <nextcloud min-version="18" max-version="19"/>
     </dependencies>
-    <navigations>
-        <navigation>
-            <name>Projects</name>
-            <route>projects.page.index</route>
-        </navigation>
-    </navigations>
 </info>
