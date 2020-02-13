@@ -20,4 +20,7 @@
             <collection>OCA\Projects\Sabre\RootCollection</collection>
         </collections>
     </sabre>
+    <types>
+        <dav/>
+    </types>
 </info>
