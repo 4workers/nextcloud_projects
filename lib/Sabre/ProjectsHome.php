@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OCA\Projects\Sabre;
 
-use OCA\Files_Trashbin\Trash\ITrashManager;
 use OCA\Projects\ProjectsManager;
 use OCP\IUser;
 use Sabre\DAV\Exception\Forbidden;
