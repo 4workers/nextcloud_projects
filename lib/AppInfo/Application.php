@@ -7,6 +7,8 @@ namespace OCA\Projects\AppInfo;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IInitialStateService;
+use OCA\DAV\CalDAV\Proxy\ProxyMapper;
+use OCA\DAV\Connector\Sabre\Principal;
 
 class Application extends App
 {
@@ -14,6 +16,20 @@ class Application extends App
     public function __construct()
     {
         parent::__construct('projects');
+
+        $container = $this->getContainer();
+
+        $container->registerService('principalBackend', function () {
+            return new Principal(
+                \OC::$server->getUserManager(),
+                \OC::$server->getGroupManager(),
+                \OC::$server->getShareManager(),
+                \OC::$server->getUserSession(),
+                \OC::$server->getAppManager(),
+                \OC::$server->query(ProxyMapper::class),
+                \OC::$server->getConfig()
+            );
+        });
     }
 
     public function register()
