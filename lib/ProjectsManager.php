@@ -6,11 +6,9 @@ namespace OCA\Projects;
 use OCP\Files\Storage\IStorage;
 use OCP\IUser;
 
-class ProjectsManager {
+class ProjectsManager implements ProjectsBackend {
 	/** @var ProjectsBackend[] */
 	private $backends = [];
-
-	private $trashPaused = false;
 
 	public function registerBackend(string $storageType, ProjectsBackend $backend) {
 		$this->backends[$storageType] = $backend;
@@ -66,14 +64,14 @@ class ProjectsManager {
 		}
 	}
 
-//	public function getProjectNodeById(IUser $user, int $fileId) {
-//		foreach ($this->backends as $backend) {
-//			$item = $backend->getProjectNodeById($user, $fileId);
-//			if ($item !== null) {
-//				return $item;
-//			}
-//		}
-//		return null;
-//	}
+	public function getProjectNodeById(IUser $user, int $fileId) {
+		foreach ($this->backends as $backend) {
+			$item = $backend->getProjectNodeById($user, $fileId);
+			if ($item !== null) {
+				return $item;
+			}
+		}
+		return null;
+	}
 
 }

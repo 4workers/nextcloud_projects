@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace OCA\Projects\Sabre;
 
+use OCA\Projects\ProjectsManager;
 use Sabre\DAV\INode;
 use Sabre\DAVACL\AbstractPrincipalCollection;
 use Sabre\DAVACL\PrincipalBackend\BackendInterface;
 
 class RootCollection extends AbstractPrincipalCollection {
 
-	public function __construct(
+    /**
+     * @var ProjectsManager
+     */
+    private $projectsManager;
+
+    public function __construct(
+	    ProjectsManager $projectsManager,
 		BackendInterface $principalBackend
 	) {
 		parent::__construct($principalBackend, 'principals/users');
-	}
+        $this->projectsManager = $projectsManager;
+    }
 
 	/**
 	 * This method returns a node for a principal.
@@ -32,7 +40,7 @@ class RootCollection extends AbstractPrincipalCollection {
 		if (is_null($user) || $name !== $user->getUID()) {
 			throw new \Sabre\DAV\Exception\Forbidden();
 		}
-		return new ProjectsHome($principalInfo, $user);
+		return new ProjectsHome($this->projectsManager, $principalInfo, $user);
 	}
 
 	public function getName(): string {
