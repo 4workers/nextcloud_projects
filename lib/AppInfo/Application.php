@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace OCA\Projects\AppInfo;
 
+use OCA\Projects\ProjectsManager;
+use OCA\Projects\SimpleProjectsBackend;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IInitialStateService;
@@ -30,6 +32,13 @@ class Application extends App
                 \OC::$server->getConfig()
             );
         });
+
+        $server = $container->getServer();
+
+        $projectsManager = $server->query(ProjectsManager::class);
+        $projectsBackend = $server->query(SimpleProjectsBackend::class);
+        $projectsManager->registerBackend(OCP\Files\Storage\IStorage::class, $projectsBackend);
+
     }
 
     public function register()
