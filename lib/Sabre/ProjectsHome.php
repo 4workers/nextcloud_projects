@@ -54,26 +54,11 @@ class ProjectsHome implements ICollection {
 	}
 
 	public function getChild($name) {
-		if ($name === 'restore') {
-//			return new RestoreFolder();
-		}
-		if ($name === 'trash') {
-//			return new TrashRoot($this->user, $this->trashManager);
-		}
-
 		throw new NotFound();
 	}
 
 	public function getChildren(): array {
-        return $entries = $this->projectsManager->listProjects($this->user);
-
-        $children = array_map(function (ProjectItem $entry) {
-            if ($entry->getType() === FileInfo::TYPE_FOLDER) {
-                return new ProjectFolder($this->projectsManager, $entry);
-            }
-        }, $entries);
-
-        return $children;
+        return $this->projectsManager->listProjects($this->user);
 	}
 
 	public function childExists($name): bool {

@@ -10,6 +10,8 @@ class ProjectsManager implements ProjectsBackend {
 	/** @var ProjectsBackend[] */
 	private $backends = [];
 
+	private $trashPaused = false;
+
 	public function registerBackend(string $storageType, ProjectsBackend $backend) {
 		$this->backends[$storageType] = $backend;
 	}

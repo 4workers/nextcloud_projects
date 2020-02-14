@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace OCA\Projects;
 
 use OC\Files\Filesystem;
+use OC\Files\SimpleFS\SimpleFolder;
 use OC\Files\View;
 use OCA\Files_Trashbin\Helper;
 use OCA\Files_Trashbin\Storage;
 use OCA\Files_Trashbin\Trashbin;
-use OCP\Files\FileInfo;
+use OCA\Projects\Sabre\ProjectSymlink;
 use OCP\Files\IAppData;
+use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\Storage\IStorage;
 use OCP\IUser;
@@ -18,47 +20,38 @@ class SimpleProjectsBackend implements ProjectsBackend {
 
 	/** @var IAppData */
 	private $appData;
+    /**
+     * @var IRootFolder
+     */
+    private $rootFolder;
 
-	public function __construct(IAppData $appData) {
+    public function __construct(IAppData $appData, IRootFolder $rootFolder) {
 		$this->appData = $appData;
-	}
+        $this->rootFolder = $rootFolder;
+    }
 
 	/**
 	 * @param array $items
 	 * @param IUser $user
-	 * @param ITrashItem $parent
-	 * @return ITrashItem[]
+	 * @return ProjectSymlink[]
 	 */
-	private function mapTrashItems(array $items, IUser $user, ITrashItem $parent = null): array {
-		$parentTrashPath = ($parent instanceof ITrashItem) ? $parent->getTrashPath() : '';
-		$isRoot = $parent === null;
-		return array_map(function (FileInfo $file) use ($parent, $parentTrashPath, $isRoot, $user) {
-			$originalLocation = $isRoot ? $file['extraData'] : $parent->getOriginalLocation() . '/' . $file->getName();
-			if (!$originalLocation) {
-				$originalLocation = $file->getName();
-			}
-			return new TrashItem(
-				$this,
-				$originalLocation,
-				$file->getMTime(),
-				$parentTrashPath . '/' . $file->getName() . ($isRoot ? '.d' . $file->getMtime() : ''),
-				$file,
-				$user
-			);
+	private function mapToProjectFolder(array $items, IUser $user): array {
+		return array_map(function (SimpleFolder $file) use ($user) {
+		    $folder = $this->rootFolder->getUserFolder($user->getUID())->getById('569');
+			return new ProjectSymlink($file, $folder[0]);
 		}, $items);
 	}
 
 	public function listProjects(IUser $user): array {
-	    $this->appData->newFolder('project1');
-		return $entries = $this->appData->getDirectoryListing('/projects/' . $user->getUID());
-		return $this->mapTrashItems($entries, $user);
+		$entries = $this->appData->getDirectoryListing('/projects/' . $user->getUID());
+		return $this->mapToProjectFolder($entries, $user);
 
 	}
 
 	public function listTrashFolder(ITrashItem $folder): array {
 		$user = $folder->getUser();
 		$entries = Helper::getTrashFiles($folder->getTrashPath(), $user->getUID());
-		return $this->mapTrashItems($entries, $user ,$folder);
+		return $this->mapToProjectFolder($entries, $user ,$folder);
 	}
 
 	public function restoreItem(ITrashItem $item) {
