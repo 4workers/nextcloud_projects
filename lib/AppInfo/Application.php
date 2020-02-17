@@ -21,17 +21,19 @@ class Application extends App
 
         $container = $this->getContainer();
 
-        $container->registerService('principalBackend', function () {
-            return new Principal(
-                \OC::$server->getUserManager(),
-                \OC::$server->getGroupManager(),
-                \OC::$server->getShareManager(),
-                \OC::$server->getUserSession(),
-                \OC::$server->getAppManager(),
-                \OC::$server->query(ProxyMapper::class),
-                \OC::$server->getConfig()
-            );
-        });
+        $container->registerService(
+            'principalBackend', function () {
+                return new Principal(
+                    \OC::$server->getUserManager(),
+                    \OC::$server->getGroupManager(),
+                    \OC::$server->getShareManager(),
+                    \OC::$server->getUserSession(),
+                    \OC::$server->getAppManager(),
+                    \OC::$server->query(ProxyMapper::class),
+                    \OC::$server->getConfig()
+                );
+            }
+        );
 
         $server = $container->getServer();
 
@@ -43,15 +45,17 @@ class Application extends App
 
     public function register()
     {
-//        /* @var IEventDispatcher $eventDispatcher */
+        //        /* @var IEventDispatcher $eventDispatcher */
         $eventDispatcher = $this->getContainer()->query(IEventDispatcher::class);
-        $eventDispatcher->addListener('OCA\Files::loadAdditionalScripts', function() {
-            script('projects', 'filelist_plugin');
-            style('projects', 'filelist');
-            /* @var IInitialStateService $state */
-            $state = $this->getContainer()->query(IInitialStateService::class);
-            $state->provideInitialState('projects', 'project-icon', image_path('projects', 'folder.svg'));
-        });
+        $eventDispatcher->addListener(
+            'OCA\Files::loadAdditionalScripts', function () {
+                script('projects', 'filelist_plugin');
+                style('projects', 'filelist');
+                /* @var IInitialStateService $state */
+                $state = $this->getContainer()->query(IInitialStateService::class);
+                $state->provideInitialState('projects', 'project-icon', image_path('projects', 'folder.svg'));
+            }
+        );
     }
 
 }

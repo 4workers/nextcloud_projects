@@ -50,8 +50,8 @@ class ProjectSymlink implements ICollection
      * return the same contents of what was submitted here, you are strongly
      * recommended to omit the ETag.
      *
-     * @param string $name Name of the file
-     * @param resource|string $data Initial payload
+     * @param  string          $name Name of the file
+     * @param  resource|string $data Initial payload
      * @return null|string
      */
     function createFile($name, $data = null)
@@ -62,7 +62,7 @@ class ProjectSymlink implements ICollection
     /**
      * Creates a new subdirectory
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     function createDirectory($name)
@@ -76,7 +76,7 @@ class ProjectSymlink implements ICollection
      * This method must throw Sabre\DAV\Exception\NotFound if the node does not
      * exist.
      *
-     * @param string $name
+     * @param  string $name
      * @return INode
      */
     function getChild($name)
@@ -97,7 +97,7 @@ class ProjectSymlink implements ICollection
     /**
      * Checks if a child-node with the specified name exists
      *
-     * @param string $name
+     * @param  string $name
      * @return bool
      */
     function childExists($name)
@@ -130,7 +130,7 @@ class ProjectSymlink implements ICollection
     /**
      * Renames the node
      *
-     * @param string $name The new name
+     * @param  string $name The new name
      * @return void
      */
     function setName($name): void

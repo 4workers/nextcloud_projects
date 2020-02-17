@@ -10,62 +10,76 @@ use Sabre\DAV\Exception\Forbidden;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\ICollection;
 
-class ProjectsHome implements ICollection {
+class ProjectsHome implements ICollection
+{
 
-	/** @var array */
-	private $principalInfo;
+    /**
+     * @var array 
+     */
+    private $principalInfo;
 
-	/** @var IUser */
-	private $user;
+    /**
+     * @var IUser 
+     */
+    private $user;
     /**
      * @var ProjectsManager
      */
     private $projectsManager;
 
     public function __construct(
-	    ProjectsManager $projectsManager,
-		array $principalInfo,
-		IUser $user
-	) {
-		$this->principalInfo = $principalInfo;
-		$this->user = $user;
+        ProjectsManager $projectsManager,
+        array $principalInfo,
+        IUser $user
+    ) {
+        $this->principalInfo = $principalInfo;
+        $this->user = $user;
         $this->projectsManager = $projectsManager;
     }
 
-	public function delete() {
-		throw new Forbidden();
-	}
+    public function delete()
+    {
+        throw new Forbidden();
+    }
 
-	public function getName(): string {
-		list(, $name) = \Sabre\Uri\split($this->principalInfo['uri']);
-		return $name;
-	}
+    public function getName(): string
+    {
+        list(, $name) = \Sabre\Uri\split($this->principalInfo['uri']);
+        return $name;
+    }
 
-	public function setName($name) {
-		throw new Forbidden('Permission denied to rename this trashbin');
-	}
+    public function setName($name)
+    {
+        throw new Forbidden('Permission denied to rename this trashbin');
+    }
 
-	public function createFile($name, $data = null) {
-		throw new Forbidden('Not allowed to create files in the trashbin');
-	}
+    public function createFile($name, $data = null)
+    {
+        throw new Forbidden('Not allowed to create files in the trashbin');
+    }
 
-	public function createDirectory($name) {
-		throw new Forbidden('Not allowed to create folders in the trashbin');
-	}
+    public function createDirectory($name)
+    {
+        throw new Forbidden('Not allowed to create folders in the trashbin');
+    }
 
-	public function getChild($name) {
-		throw new NotFound();
-	}
+    public function getChild($name)
+    {
+        throw new NotFound();
+    }
 
-	public function getChildren(): array {
+    public function getChildren(): array
+    {
         return $this->projectsManager->listProjects($this->user);
-	}
+    }
 
-	public function childExists($name): bool {
-		return $name === 'restore' || $name === 'trash';
-	}
+    public function childExists($name): bool
+    {
+        return $name === 'restore' || $name === 'trash';
+    }
 
-	public function getLastModified(): int {
-		return 0;
-	}
+    public function getLastModified(): int
+    {
+        return 0;
+    }
 }
