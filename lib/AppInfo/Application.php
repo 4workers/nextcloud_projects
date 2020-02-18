@@ -29,14 +29,14 @@ class Application extends App
 
         $container->registerService(
             PropertiesStorage::class, function ($c) {
-            return new PropertiesStorage($c->query(IDBConnection::class));
-        }
+                return new PropertiesStorage($c->query(IDBConnection::class));
+            }
         );
 
         $container->registerService(
             ProjectStorage::class, function ($c) {
-            return new ProjectStorage($c->query(PropertiesStorage::class));
-        }
+                return new ProjectStorage($c->query(PropertiesStorage::class));
+            }
         );
 
         $container->registerService(

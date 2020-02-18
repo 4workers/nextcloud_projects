@@ -45,12 +45,13 @@ class ProjectStorage
 
 }
 
-class DummyProjectRoot implements IRootFolder {
+class DummyProjectRoot implements IRootFolder
+{
 
     /**
-     * @param string $scope
-     * @param string $method
-     * @param callable $callback
+     * @param  string   $scope
+     * @param  string   $method
+     * @param  callable $callback
      * @return void
      */
     public function listen($scope, $method, callable $callback)
@@ -59,9 +60,9 @@ class DummyProjectRoot implements IRootFolder {
     }
 
     /**
-     * @param string $scope optional
-     * @param string $method optional
-     * @param callable $callback optional
+     * @param  string   $scope    optional
+     * @param  string   $method   optional
+     * @param  callable $callback optional
      * @return void
      */
     public function removeListener($scope = null, $method = null, callable $callback = null)
@@ -73,7 +74,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the full mimetype of the file or folder i.e. 'image/png'
      *
      * @return string
-     * @since 7.0.0
+     * @since  7.0.0
      */
     public function getMimetype()
     {
@@ -84,7 +85,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the first part of the mimetype of the file or folder i.e. 'image'
      *
      * @return string
-     * @since 7.0.0
+     * @since  7.0.0
      */
     public function getMimePart()
     {
@@ -95,7 +96,7 @@ class DummyProjectRoot implements IRootFolder {
      * Check whether the file is encrypted
      *
      * @return bool
-     * @since 7.0.0
+     * @since  7.0.0
      */
     public function isEncrypted()
     {
@@ -106,7 +107,7 @@ class DummyProjectRoot implements IRootFolder {
      * Check whether this is a file or a folder
      *
      * @return string \OCP\Files\FileInfo::TYPE_FILE|\OCP\Files\FileInfo::TYPE_FOLDER
-     * @since 7.0.0
+     * @since  7.0.0
      */
     public function getType()
     {
@@ -117,7 +118,7 @@ class DummyProjectRoot implements IRootFolder {
      * Check if a file or folder is shared
      *
      * @return bool
-     * @since 7.0.0
+     * @since  7.0.0
      */
     public function isShared()
     {
@@ -128,7 +129,7 @@ class DummyProjectRoot implements IRootFolder {
      * Check if a file or folder is mounted
      *
      * @return bool
-     * @since 7.0.0
+     * @since  7.0.0
      */
     public function isMounted()
     {
@@ -139,7 +140,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the mountpoint the file belongs to
      *
      * @return \OCP\Files\Mount\IMountPoint
-     * @since 8.0.0
+     * @since  8.0.0
      */
     public function getMountPoint()
     {
@@ -150,7 +151,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the owner of the file
      *
      * @return \OCP\IUser
-     * @since 9.0.0
+     * @since  9.0.0
      */
     public function getOwner()
     {
@@ -166,7 +167,7 @@ class DummyProjectRoot implements IRootFolder {
      * for files uploaded by the sync clients
      *
      * @return int
-     * @since 18.0.0
+     * @since  18.0.0
      */
     public function getCreationTime(): int
     {
@@ -182,7 +183,7 @@ class DummyProjectRoot implements IRootFolder {
      * files created by Nextcloud apps generally do not have an the upload time set
      *
      * @return int
-     * @since 18.0.0
+     * @since  18.0.0
      */
     public function getUploadTime(): int
     {
@@ -193,7 +194,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the stored checksum for this file
      *
      * @return string
-     * @since 9.0.0
+     * @since  9.0.0
      */
     public function getChecksum()
     {
@@ -204,7 +205,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the extension of the file
      *
      * @return string
-     * @since 15.0.0
+     * @since  15.0.0
      */
     public function getExtension(): string
     {
@@ -214,10 +215,10 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Get the full path of an item in the folder within owncloud's filesystem
      *
-     * @param string $path relative path of an item in the folder
+     * @param  string $path relative path of an item in the folder
      * @return string
      * @throws \OCP\Files\NotPermittedException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getFullPath($path)
     {
@@ -227,10 +228,10 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Get the path of an item in the folder relative to the folder
      *
-     * @param string $path absolute path of an item in the folder
+     * @param  string $path absolute path of an item in the folder
      * @return string
      * @throws \OCP\Files\NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getRelativePath($path)
     {
@@ -240,9 +241,9 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * check if a node is a (grand-)child of the folder
      *
-     * @param \OCP\Files\Node $node
+     * @param  \OCP\Files\Node $node
      * @return bool
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function isSubNode($node)
     {
@@ -254,7 +255,7 @@ class DummyProjectRoot implements IRootFolder {
      *
      * @throws \OCP\Files\NotFoundException
      * @return \OCP\Files\Node[]
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getDirectoryListing()
     {
@@ -264,10 +265,10 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Get the node at $path
      *
-     * @param string $path relative path of the file or folder
+     * @param  string $path relative path of the file or folder
      * @return \OCP\Files\Node
      * @throws \OCP\Files\NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function get($path)
     {
@@ -277,9 +278,9 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Check if a file or folder exists in the folder
      *
-     * @param string $path relative path of the file or folder
+     * @param  string $path relative path of the file or folder
      * @return bool
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function nodeExists($path)
     {
@@ -289,10 +290,10 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Create a new folder
      *
-     * @param string $path relative path of the new folder
+     * @param  string $path relative path of the new folder
      * @return \OCP\Files\Folder
      * @throws \OCP\Files\NotPermittedException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function newFolder($path)
     {
@@ -302,10 +303,10 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Create a new file
      *
-     * @param string $path relative path of the new file
+     * @param  string $path relative path of the new file
      * @return \OCP\Files\File
      * @throws \OCP\Files\NotPermittedException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function newFile($path)
     {
@@ -315,9 +316,9 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * search for files with the name matching $query
      *
-     * @param string|ISearchQuery $query
+     * @param  string|ISearchQuery $query
      * @return \OCP\Files\Node[]
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function search($query)
     {
@@ -328,9 +329,9 @@ class DummyProjectRoot implements IRootFolder {
      * search for files by mimetype
      * $mimetype can either be a full mimetype (image/png) or a wildcard mimetype (image)
      *
-     * @param string $mimetype
+     * @param  string $mimetype
      * @return \OCP\Files\Node[]
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function searchByMime($mimetype)
     {
@@ -340,10 +341,10 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * search for files by tag
      *
-     * @param string|int $tag tag name or tag id
-     * @param string $userId owner of the tags
+     * @param  string|int $tag    tag name or tag id
+     * @param  string     $userId owner of the tags
      * @return \OCP\Files\Node[]
-     * @since 8.0.0
+     * @since  8.0.0
      */
     public function searchByTag($tag, $userId)
     {
@@ -356,9 +357,9 @@ class DummyProjectRoot implements IRootFolder {
      * This method could return multiple entries. For example once the file/folder
      * is shared or mounted (files_external) to the user multiple times.
      *
-     * @param int $id
+     * @param  int $id
      * @return \OCP\Files\Node[]
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getById($id)
     {
@@ -369,7 +370,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the amount of free space inside the folder
      *
      * @return int
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getFreeSpace()
     {
@@ -380,7 +381,7 @@ class DummyProjectRoot implements IRootFolder {
      * Check if new files or folders can be created within the folder
      *
      * @return bool
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function isCreatable()
     {
@@ -390,10 +391,10 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Add a suffix to the name in case the file exists
      *
-     * @param string $name
+     * @param  string $name
      * @return string
      * @throws NotPermittedException
-     * @since 8.1.0
+     * @since  8.1.0
      */
     public function getNonExistingName($name)
     {
@@ -401,10 +402,10 @@ class DummyProjectRoot implements IRootFolder {
     }
 
     /**
-     * @param int $limit
-     * @param int $offset
+     * @param  int $limit
+     * @param  int $offset
      * @return \OCP\Files\Node[]
-     * @since 9.1.0
+     * @since  9.1.0
      */
     public function getRecent($limit, $offset = 0)
     {
@@ -414,9 +415,9 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Returns a view to user's files folder
      *
-     * @param string $userId user ID
+     * @param  string $userId user ID
      * @return \OCP\Files\Folder
-     * @since 8.2.0
+     * @since  8.2.0
      */
     public function getUserFolder($userId)
     {
@@ -426,10 +427,10 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Move the file or folder to a new location
      *
-     * @param string $targetPath the absolute target path
+     * @param  string $targetPath the absolute target path
      * @throws \OCP\Files\NotPermittedException
      * @return \OCP\Files\Node
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function move($targetPath)
     {
@@ -438,8 +439,9 @@ class DummyProjectRoot implements IRootFolder {
 
     /**
      * Delete the file or folder
+     *
      * @return void
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function delete()
     {
@@ -449,9 +451,9 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Cope the file or folder to a new location
      *
-     * @param string $targetPath the absolute target path
+     * @param  string $targetPath the absolute target path
      * @return \OCP\Files\Node
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function copy($targetPath)
     {
@@ -462,10 +464,10 @@ class DummyProjectRoot implements IRootFolder {
      * Change the modified date of the file or folder
      * If $mtime is omitted the current time will be used
      *
-     * @param int $mtime (optional) modified date as unix timestamp
+     * @param  int $mtime (optional) modified date as unix timestamp
      * @throws \OCP\Files\NotPermittedException
      * @return void
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function touch($mtime = null)
     {
@@ -477,7 +479,7 @@ class DummyProjectRoot implements IRootFolder {
      *
      * @return \OCP\Files\Storage
      * @throws \OCP\Files\NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getStorage()
     {
@@ -488,7 +490,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the full path of the file or folder
      *
      * @return string
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getPath()
     {
@@ -499,7 +501,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the path of the file or folder relative to the mountpoint of it's storage
      *
      * @return string
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getInternalPath()
     {
@@ -512,7 +514,7 @@ class DummyProjectRoot implements IRootFolder {
      * @return int
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getId()
     {
@@ -526,7 +528,7 @@ class DummyProjectRoot implements IRootFolder {
      *  - size
      *
      * @return array
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function stat()
     {
@@ -539,7 +541,7 @@ class DummyProjectRoot implements IRootFolder {
      * @return int
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getMTime()
     {
@@ -549,11 +551,11 @@ class DummyProjectRoot implements IRootFolder {
     /**
      * Get the size of the file or folder in bytes
      *
-     * @param bool $includeMounts
+     * @param  bool $includeMounts
      * @return int
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getSize($includeMounts = true)
     {
@@ -568,7 +570,7 @@ class DummyProjectRoot implements IRootFolder {
      * @return string
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getEtag()
     {
@@ -586,7 +588,7 @@ class DummyProjectRoot implements IRootFolder {
      * @return int
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0 - namespace of constants has changed in 8.0.0
+     * @since  6.0.0 - namespace of constants has changed in 8.0.0
      */
     public function getPermissions()
     {
@@ -599,7 +601,7 @@ class DummyProjectRoot implements IRootFolder {
      * @return bool
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function isReadable()
     {
@@ -612,7 +614,7 @@ class DummyProjectRoot implements IRootFolder {
      * @return bool
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function isUpdateable()
     {
@@ -625,7 +627,7 @@ class DummyProjectRoot implements IRootFolder {
      * @return bool
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function isDeletable()
     {
@@ -638,7 +640,7 @@ class DummyProjectRoot implements IRootFolder {
      * @return bool
      * @throws InvalidPathException
      * @throws NotFoundException
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function isShareable()
     {
@@ -649,7 +651,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the parent folder of the file or folder
      *
      * @return Folder
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getParent()
     {
@@ -660,7 +662,7 @@ class DummyProjectRoot implements IRootFolder {
      * Get the filename of the file or folder
      *
      * @return string
-     * @since 6.0.0
+     * @since  6.0.0
      */
     public function getName()
     {
@@ -684,9 +686,9 @@ class DummyProjectRoot implements IRootFolder {
      * Note that in most cases you won't need to manually manage the locks for any files you're working with,
      * any filesystem operation will automatically acquire the relevant locks for that operation.
      *
-     * @param int $type \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
+     * @param  int $type \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
      * @throws \OCP\Lock\LockedException
-     * @since 9.1.0
+     * @since  9.1.0
      */
     public function lock($type)
     {
@@ -702,9 +704,9 @@ class DummyProjectRoot implements IRootFolder {
      * A locked exception will be thrown when these preconditions are not met.
      * Note that this is also the case if no existing lock exists for the file.
      *
-     * @param int $targetType \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
+     * @param  int $targetType \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
      * @throws \OCP\Lock\LockedException
-     * @since 9.1.0
+     * @since  9.1.0
      */
     public function changeLock($targetType)
     {
@@ -718,9 +720,9 @@ class DummyProjectRoot implements IRootFolder {
      *
      * Note that this method will not give any sort of error when trying to free a lock that doesn't exist.
      *
-     * @param int $type \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
+     * @param  int $type \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
      * @throws \OCP\Lock\LockedException
-     * @since 9.1.0
+     * @since  9.1.0
      */
     public function unlock($type)
     {

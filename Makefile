@@ -157,4 +157,4 @@ test: composer
 	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.integration.xml
 
 lint-fix:
-	$(CURDIR)/vendor/bin/phpcbf --standard=PEAR .
+	$(CURDIR)/vendor/bin/phpcbf --standard=PEAR ./lib
