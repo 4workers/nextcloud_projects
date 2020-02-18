@@ -22,5 +22,6 @@
     </sabre>
     <types>
         <dav/>
+        <filesystem/>
     </types>
 </info>

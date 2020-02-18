@@ -20,7 +20,7 @@ class SimpleProjectsBackend implements ProjectsBackend
 {
 
     /**
-     * @var IAppData 
+     * @var IAppData
      */
     private $appData;
     /**
@@ -39,20 +39,21 @@ class SimpleProjectsBackend implements ProjectsBackend
      * @param  IUser $user
      * @return ProjectSymlink[]
      */
-    private function mapToProjectFolder(array $items, IUser $user): array
+    private function mapToSymLinks(array $items, IUser $user): array
     {
         return array_map(
             function (SimpleFolder $file) use ($user) {
-                $folder = $this->rootFolder->getUserFolder($user->getUID())->getById('569');
-                return new ProjectSymlink($file, $folder[0]);
+                $folders = $this->rootFolder->getUserFolder($user->getUID())->getById('945');
+                return new ProjectSymlink($file, $folders[0]);
             }, $items
         );
     }
 
     public function listProjects(IUser $user): array
     {
+        $this->appData->newFolder('project21');
         $entries = $this->appData->getDirectoryListing('/projects/' . $user->getUID());
-        return $this->mapToProjectFolder($entries, $user);
+        return $this->mapToSymLinks($entries, $user);
 
     }
 
@@ -60,7 +61,7 @@ class SimpleProjectsBackend implements ProjectsBackend
     {
         $user = $folder->getUser();
         $entries = Helper::getTrashFiles($folder->getTrashPath(), $user->getUID());
-        return $this->mapToProjectFolder($entries, $user, $folder);
+        return $this->mapToSymLinks($entries, $user, $folder);
     }
 
     public function restoreItem(ITrashItem $item)
