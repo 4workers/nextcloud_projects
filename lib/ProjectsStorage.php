@@ -57,6 +57,7 @@ class ProjectsStorage
 
     public function findProjectByNode(Node $node): ?Node
     {
+        return null;
         $currentNode = $node;
         $foreignId = $this->propertiesStorage->foreignId($currentNode);
         if ($foreignId) {
@@ -81,12 +82,14 @@ class ProjectsStorage
         $uid = $root->getOwner()->getUID();
         try {
             $link = $this->projectsRootLinksMapper->findByUser($uid);
+            $link->setNodeId($root->getId());
+            $this->projectsRootLinksMapper->update($link);
         } catch (DoesNotExistException $e) {
             $link = new ProjectRootLink();
             $link->setOwner($uid);
+            $link->setNodeId($root->getId());
+            $this->projectsRootLinksMapper->insert($link);
         }
-        $link->setNodeId($root->getId());
-        $this->projectsRootLinksMapper->insertOrUpdate($link);
         return $root;
     }
 
