@@ -32,8 +32,8 @@ class Version1Date20200218123214 extends SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		if (!$schema->hasTable('projects_roots')) {
-			$table = $schema->createTable('projects_roots');
+		if (!$schema->hasTable('projects_roots_links')) {
+			$table = $schema->createTable('projects_roots_links');
 			$table->addColumn('id', 'bigint', [
 				'autoincrement' => true,
 				'notnull' => true,
@@ -48,12 +48,12 @@ class Version1Date20200218123214 extends SimpleMigrationStep {
 				'length' => 11,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addIndex(['node_id'], 'projects_roots_node_id_index');
-			$table->addIndex(['owner'], 'projects_roots_owner_index');
+			$table->addIndex(['node_id'], 'projects_roots_links_node_id_index');
+			$table->addUniqueIndex(['owner'], 'projects_roots_links_owner_index');
 		}
 
-		if (!$schema->hasTable('projects')) {
-			$table = $schema->createTable('projects');
+		if (!$schema->hasTable('projects_links')) {
+			$table = $schema->createTable('projects_links');
 			$table->addColumn('id', 'bigint', [
 				'autoincrement' => true,
 				'notnull' => true,
@@ -68,8 +68,8 @@ class Version1Date20200218123214 extends SimpleMigrationStep {
 				'length' => 11,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addIndex(['root_id'], 'projects_root_id_index');
-			$table->addIndex(['node_id'], 'projects_node_id_index');
+			$table->addIndex(['root_id'], 'projects_links_root_id_index');
+			$table->addIndex(['node_id'], 'projects__links_node_id_index');
 		}
 		return $schema;
 	}

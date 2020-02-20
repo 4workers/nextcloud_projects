@@ -9,11 +9,9 @@ use OCP\IUser;
 class ProjectsManager implements ProjectsBackend
 {
     /**
-     * @var ProjectsBackend[] 
+     * @var ProjectsBackend[]
      */
     private $backends = [];
-
-    private $trashPaused = false;
 
     public function registerBackend(string $storageType, ProjectsBackend $backend)
     {
@@ -63,7 +61,7 @@ class ProjectsManager implements ProjectsBackend
         $fullType = get_class($storage);
         $foundType = array_reduce(
             array_keys($this->backends), function ($type, $registeredType) use ($storage) {
-                if ($storage->instanceOfStorage($registeredType) 
+                if ($storage->instanceOfStorage($registeredType)
                     && ($type === '' || is_subclass_of($registeredType, $type))
                 ) {
                     return $registeredType;
@@ -83,6 +81,17 @@ class ProjectsManager implements ProjectsBackend
     {
         foreach ($this->backends as $backend) {
             $item = $backend->getProjectNodeById($user, $fileId);
+            if ($item !== null) {
+                return $item;
+            }
+        }
+        return null;
+    }
+
+    public function getRoot(IUser $user)
+    {
+        foreach ($this->backends as $backend) {
+            $item = $backend->getRoot($user);
             if ($item !== null) {
                 return $item;
             }

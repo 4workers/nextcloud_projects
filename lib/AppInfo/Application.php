@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace OCA\Projects\AppInfo;
 
 use OC;
+use OCA\Projects\Database\ProjectRootLinkMapper;
 use OCA\Projects\Hooks;
 use OCA\Projects\ProjectsManager;
 use OCA\Projects\ProjectStorage;
-use OCA\Projects\PropertiesStorage;
 use OCA\Projects\SimpleProjectsBackend;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\IContainer;
 use OCP\IDBConnection;
 use OCP\IInitialStateService;
 use OCA\DAV\CalDAV\Proxy\ProxyMapper;
@@ -28,14 +27,15 @@ class Application extends App
         $container = $this->getContainer();
 
         $container->registerService(
-            PropertiesStorage::class, function ($c) {
-                return new PropertiesStorage($c->query(IDBConnection::class));
+            ProjectRootLinkMapper::class, function ($c) {
+                return new ProjectRootLinkMapper($c->query(IDBConnection::class));
             }
         );
 
         $container->registerService(
             ProjectStorage::class, function ($c) {
-                return new ProjectStorage($c->query(PropertiesStorage::class));
+                $rootFolder = $c->query('ServerContainer')->getRootFolder();
+                return new ProjectStorage($c->query(ProjectRootLinkMapper::class), $rootFolder);
             }
         );
 

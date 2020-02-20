@@ -18,18 +18,19 @@ class Hooks
     {
         try {
             /**
- * @var IShare $share 
+ * @var IShare $share
 */
             /**
- * @var GenericEvent $event 
+ * @var GenericEvent $event
 */
             $share = $event->getSubject();
-            $storage = OC::$server->query(ProjectStorage::class);
+            $storage = OC::$server->query(ProjectsStorage::class);
             /**
- * @var ProjectStorage $storage 
+ * @var ProjectStorage $storage
 */
-            $projectsRoot = $storage->root();
-            $target = $projectsRoot->getPath() . '/' . $share->getTarget();
+            $projectsRoot = $storage->root($share->getSharedWith());
+            $userFolder = OC::$server->getUserFolder($share->getSharedWith());
+            $target = $userFolder->getRelativePath($projectsRoot->getPath()) . '/' . $share->getTarget();
             $target = Filesystem::normalizePath($target);
             $share->setTarget($target);
         } catch (Throwable $e) {
