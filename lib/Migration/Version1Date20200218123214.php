@@ -30,6 +30,7 @@ class Version1Date20200218123214 extends SimpleMigrationStep {
 	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
+		//TODO: add foreign key constrains
 		$schema = $schemaClosure();
 
 		if (!$schema->hasTable('projects_roots_links')) {
@@ -48,8 +49,8 @@ class Version1Date20200218123214 extends SimpleMigrationStep {
 				'length' => 11,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addIndex(['node_id'], 'projects_roots_links_node_id_index');
-			$table->addUniqueIndex(['owner'], 'projects_roots_links_owner_index');
+			$table->addIndex(['node_id'], 'node_id_index');
+			$table->addUniqueIndex(['owner'], 'owner_index');
 		}
 
 		if (!$schema->hasTable('projects_links')) {
@@ -67,9 +68,13 @@ class Version1Date20200218123214 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => 11,
 			]);
+            $table->addColumn('foreign_id', 'string', [
+                'notnull' => true,
+                'length' => 64,
+            ]);
 			$table->setPrimaryKey(['id']);
-			$table->addIndex(['root_id'], 'projects_links_root_id_index');
-			$table->addIndex(['node_id'], 'projects__links_node_id_index');
+			$table->addIndex(['root_id'], 'root_id_index');
+			$table->addIndex(['node_id'], 'node_id_index');
 		}
 		return $schema;
 	}
