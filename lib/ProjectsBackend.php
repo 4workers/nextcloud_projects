@@ -16,10 +16,4 @@ interface ProjectsBackend
      */
     public function listProjects(IUser $user): array;
 
-    /**
-     * @param  IUser $user
-     * @param  int   $fileId
-     * @return Node|null
-     */
-    public function getProjectNodeById(IUser $user, int $fileId);
 }

@@ -60,6 +60,10 @@ class Version1Date20200218123214 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => 5,
 			]);
+            $table->addColumn('owner', 'string', [
+                'notnull' => true,
+                'length' => 64,
+            ]);
 			$table->addColumn('root_id', 'integer', [
 				'notnull' => true,
 				'length' => 4,

@@ -62,6 +62,27 @@ class Hooks
         }
     }
 
+//    public static function preRename($event)
+//    {
+//        try {
+//            /** @var GenericEvent $event */
+//            $subjects = $event->getSubject();
+//            $subjects = is_array($subjects) ? $subjects : [$subjects];
+//            $storage = OC::$server->query(ProjectsStorage::class);
+//            foreach ($subjects as $subject) {
+//                /** @var Node $subject */
+//                if ($subject->getType() !== Node::TYPE_FOLDER) continue;
+//                $projectsRoot = $storage->root($subject->getOwner()->getUID());
+//                if (static::equalOrContains($subject, $projectsRoot)) {
+//                    throw new ForbiddenException('Project root can\'t be moved');
+//                }
+//            }
+//        } catch (Throwable $e) {
+//            //Only this exception uncatchable. nextcloud ignore any other exception
+//            throw new HintException($e);
+//        }
+//    }
+
     private static function equalOrContains(OC\Files\Node\Folder $node, OC\Files\Node\Folder $subNode)
     {
         if ($node->getId() === $subNode->getId()) return true;

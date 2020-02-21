@@ -19,6 +19,9 @@
         <collections>
             <collection>OCA\Projects\Sabre\RootCollection</collection>
         </collections>
+        <plugins>
+            <plugin>OCA\Projects\Sabre\ProjectCreatePlugin</plugin>
+        </plugins>
     </sabre>
     <types>
         <dav/>

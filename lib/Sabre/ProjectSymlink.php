@@ -16,17 +16,12 @@ class ProjectSymlink implements ICollection
 {
 
     /**
-     * @var SimpleFolder
-     */
-    private $symlink;
-    /**
      * @var Folder
      */
     private $folder;
 
-    public function __construct(SimpleFolder $symlink, Folder $folder)
+    public function __construct(Folder $folder)
     {
-        $this->symlink = $symlink;
         $this->folder = $folder;
     }
 
@@ -112,7 +107,7 @@ class ProjectSymlink implements ICollection
      */
     function delete()
     {
-        $this->symlink->delete();
+        $this->folder->delete();
     }
 
     /**
@@ -124,7 +119,7 @@ class ProjectSymlink implements ICollection
      */
     function getName()
     {
-        return $this->symlink->getName();
+        return $this->folder->getName();
     }
 
     /**

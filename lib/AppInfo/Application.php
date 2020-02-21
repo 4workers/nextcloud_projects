@@ -8,8 +8,8 @@ use OC;
 use OCA\Projects\Database\ProjectRootLinkMapper;
 use OCA\Projects\Hooks;
 use OCA\Projects\ProjectsManager;
-use OCA\Projects\ProjectStorage;
-use OCA\Projects\SimpleProjectsBackend;
+use OCA\Projects\ProjectsStorage;
+use OCA\Projects\DefaultProjectsBackend;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IDBConnection;
@@ -35,7 +35,10 @@ class Application extends App
         $container->registerService(
             ProjectStorage::class, function ($c) {
                 $rootFolder = $c->query('ServerContainer')->getRootFolder();
-                return new ProjectStorage($c->query(ProjectRootLinkMapper::class), $rootFolder);
+                return new ProjectsStorage(
+                    $c->query(ProjectRootLinkMapper::class),
+                    $c->query(ProjectLinkMapper::class),
+                    $rootFolder);
             }
         );
 
@@ -56,7 +59,7 @@ class Application extends App
         $server = $container->getServer();
 
         $projectsManager = $server->query(ProjectsManager::class);
-        $projectsBackend = $server->query(SimpleProjectsBackend::class);
+        $projectsBackend = $server->query(DefaultProjectsBackend::class);
         $projectsManager->registerBackend(OCP\Files\Storage\IStorage::class, $projectsBackend);
 
     }
@@ -76,6 +79,7 @@ class Application extends App
         );
         $eventDispatcher->addListener('OCP\Share::preShare', [Hooks::class, 'preShare']);
         $eventDispatcher->addListener('\OCP\Files::preDelete', [Hooks::class, 'preDelete']);
+        //$eventDispatcher->addListener('\OCP\Files::preRename', [Hooks::class, 'preRename']);
 
     }
 

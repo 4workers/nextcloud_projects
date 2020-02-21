@@ -6,16 +6,18 @@ namespace OCA\Projects;
 
 
 use DomainException;
+use OCA\Projects\Database\ProjectLink;
+use OCA\Projects\Database\ProjectLinkMapper;
 use OCA\Projects\Database\ProjectRootLink;
 use OCA\Projects\Database\ProjectRootLinkMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\Files\FileInfo;
+use OCP\Files\Folder;
+use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\Files\NotFoundException;
-use OCP\IUser;
-use OCP\Lock\ILockingProvider;
 
 class ProjectsStorage
 {
@@ -23,24 +25,32 @@ class ProjectsStorage
     /**
      * @var ProjectRootLinkMapper
      */
-    private $projectsRootLinksMapper;
+    private $projectRootLinkMapper;
     /**
      * @var IRootFolder
      */
-    private $rootFolder;
+    private $userRootFolder;
+    /**
+     * @var ProjectLinkMapper
+     */
+    private $projectLinkMapper;
 
-    public function __construct(ProjectRootLinkMapper $projectsRootLinksMapper, IRootFolder $rootFolder)
+    public function __construct(
+        ProjectRootLinkMapper $projectRootLinkMapper,
+        ProjectLinkMapper $projectLinkMapper,
+        IRootFolder $userRootFolder)
     {
-        $this->projectsRootLinksMapper = $projectsRootLinksMapper;
-        $this->rootFolder = $rootFolder;
+        $this->projectRootLinkMapper = $projectRootLinkMapper;
+        $this->userRootFolder = $userRootFolder;
+        $this->projectLinkMapper = $projectLinkMapper;
     }
 
-    public function root(string $uid): FileInfo
+    public function projectsRoot(string $uid): Folder
     {
         $root = null;
         try {
-            $link = $this->projectsRootLinksMapper->findByUser($uid);
-            $nodes = $this->rootFolder->getUserFolder($uid)->getById($link->getNodeId());
+            $link = $this->projectRootLinkMapper->findByUser($uid);
+            $nodes = $this->userRootFolder->getUserFolder($uid)->getById($link->getNodeId());
             if (count($nodes) > 1) {
                 throw new DomainException('Projects root can be only one');
             }
@@ -55,42 +65,61 @@ class ProjectsStorage
         return $root;
     }
 
-    public function findProjectByNode(Node $node): ?Node
+    /**
+     * @param Node $node
+     * @return Node
+     * @throws DoesNotExistException
+     * @throws InvalidPathException
+     * @throws MultipleObjectsReturnedException
+     * @throws NotFoundException
+     */
+    public function findProjectByNode(Node $node): Node
     {
-        return null;
-        $currentNode = $node;
-        $foreignId = $this->propertiesStorage->foreignId($currentNode);
-        if ($foreignId) {
-            return $node;
-        }
-        try {
-            $currentNode = $currentNode->getParent();
-        } catch (NotFoundException $e) {
-            return null;
-        }
-        return $this->findProjectByNode($currentNode);
+        $this->projectLinkMapper->findByNodeId($node->getId());
+        return $node;
     }
 
     private function createProjectRoot(string $uid): FileInfo
     {
         //TODO: wrap in transaction
         try {
-            $root = $this->rootFolder->getUserFolder($uid)->get(getenv('PROJECTS_ROOT'));
+            $root = $this->userRootFolder->getUserFolder($uid)->get(getenv('PROJECTS_ROOT'));
         } catch (NotFoundException $e) {
-            $root = $this->rootFolder->getUserFolder($uid)->newFolder(getenv('PROJECTS_ROOT'));
+            $root = $this->userRootFolder->getUserFolder($uid)->newFolder(getenv('PROJECTS_ROOT'));
         }
         $uid = $root->getOwner()->getUID();
         try {
-            $link = $this->projectsRootLinksMapper->findByUser($uid);
+            $link = $this->projectRootLinkMapper->findByUser($uid);
             $link->setNodeId($root->getId());
-            $this->projectsRootLinksMapper->update($link);
+            $this->projectRootLinkMapper->update($link);
         } catch (DoesNotExistException $e) {
             $link = new ProjectRootLink();
             $link->setOwner($uid);
             $link->setNodeId($root->getId());
-            $this->projectsRootLinksMapper->insert($link);
+            $this->projectRootLinkMapper->insert($link);
         }
         return $root;
+    }
+
+    public function allUserProjects(string $uid)
+    {
+        return array_map(function (ProjectLink $link) {
+            //TODO: what to do if there is to nodes with the same id?
+            return $this->userRootFolder->getById($link->getNodeId())[0];
+        }, $this->projectLinkMapper->findByUser($uid));
+    }
+
+    public function createProject(string $uid, string $name, string $foreignId): Folder
+    {
+        $root = $this->projectsRoot($uid);
+        $projectNode = $root->newFolder($name);
+        $link = new ProjectLink();
+        $link->setRootId($root->getId());
+        $link->setOwner($projectNode->getOwner()->getUID());
+        $link->setNodeId($projectNode->getId());
+        $link->setForeignId($foreignId);
+        $this->projectLinkMapper->insert($link);
+        return $projectNode;
     }
 
 }
