@@ -63,6 +63,22 @@ class ProjectLinkMapper extends QBMapper {
         return $this->findEntity($qb);
     }
 
+    /**
+     * Deletes an entity from the table
+     * @param int $NodeId the node id that should be deleted
+     * @return Entity the deleted entity
+     * @since 14.0.0
+     */
+    public function deleteByNodeId(int $nodeId): void {
+        $qb = $this->db->getQueryBuilder();
+
+        $qb->delete($this->tableName)
+            ->where(
+                $qb->expr()->eq('node_id', $qb->createNamedParameter($nodeId))
+            );
+        $qb->execute();
+    }
+
     public function findByUser(string $uid, $limit=null, $offset=null)
     {
         $qb = $this->db->getQueryBuilder();

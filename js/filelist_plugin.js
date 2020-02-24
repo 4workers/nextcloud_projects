@@ -1,7 +1,7 @@
 (function (OCA) {
 
 	_.extend(OC.Files.Client, {
-		PROPERTY_FOREIGN_ID: '{' + OC.Files.Client.NS_OWNCLOUD + '}foreign-id',
+		PROPERTY_FOREIGN_ID: '{https://wuerth-it.com/ns}foreign-id',
 	});
 
 

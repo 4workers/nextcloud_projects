@@ -21,6 +21,7 @@
         </collections>
         <plugins>
             <plugin>OCA\Projects\Sabre\ProjectCreatePlugin</plugin>
+            <plugin>OCA\Projects\Sabre\PropFindPlugin</plugin>
         </plugins>
     </sabre>
     <types>

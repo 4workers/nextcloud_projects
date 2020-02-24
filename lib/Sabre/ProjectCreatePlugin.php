@@ -54,7 +54,7 @@ class ProjectCreatePlugin extends ServerPlugin {
         if (!array_key_exists('foreign-id', $data)) {
             throw new BadRequest('Provide foreign id of the project');
         }
-        $projectNode = $this->projectsStorage->createProject('matchish', $data['name'], $data['foreign-id']);
+        $projectNode = $this->projectsStorage->createProject($uid, $data['name'], $data['foreign-id']);
         $response->setStatus(201);
         $response->setHeader('Location', $projectNode->getPath());
         $response->setBody(json_encode([

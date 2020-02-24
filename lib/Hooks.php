@@ -50,18 +50,31 @@ class Hooks
             $subjects = is_array($subjects) ? $subjects : [$subjects];
             $storage = OC::$server->query(ProjectsStorage::class);
             foreach ($subjects as $subject) {
-                /** @var Node $subject */
-                if ($subject->getType() !== Node::TYPE_FOLDER) continue;
-                $projectsRoot = $storage->root($subject->getOwner()->getUID());
-                if (static::equalOrContains($subject, $projectsRoot)) {
-                    throw new ForbiddenException('Project root can\'t be deleted', false);
-                }
+                static::forbidDeleteProjectsRoot($subject, $storage);
             }
         } catch (Throwable $e) {
             //Only this exception uncatchable. nextcloud ignore any other exception
             throw new HintException($e);
         }
     }
+
+    public static function postDelete($event)
+    {
+        //TODO: what if node was deleted and hook wasn't runned
+        try {
+            /** @var GenericEvent $event */
+            $subjects = $event->getSubject();
+            $subjects = is_array($subjects) ? $subjects : [$subjects];
+            $storage = OC::$server->query(ProjectsStorage::class);
+            foreach ($subjects as $subject) {
+                $storage->unlink($subject);
+            }
+        } catch (Throwable $e) {
+            //Only this exception uncatchable. nextcloud ignore any other exception
+            throw new HintException($e);
+        }
+    }
+
 
     public static function preRename($event)
     {
@@ -87,5 +100,15 @@ class Hooks
         if ($node->getId() === $subNode->getId()) return true;
         if ($node->isSubNode($subNode)) return true;
         return false;
+    }
+
+    private static function forbidDeleteProjectsRoot(Node $node, ProjectsStorage $storage): void
+    {
+        /** @var Node $node */
+        if ($node->getType() !== Node::TYPE_FOLDER) return;
+        $projectsRoot = $storage->projectsRoot($node->getOwner()->getUID());
+        if (static::equalOrContains($node, $projectsRoot)) {
+            throw new ForbiddenException('Project root can\'t be deleted', false);
+        }
     }
 }

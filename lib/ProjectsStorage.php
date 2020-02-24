@@ -66,17 +66,16 @@ class ProjectsStorage
     }
 
     /**
-     * @param Node $node
-     * @return Node
+     * @param int $id
+     * @return int
      * @throws DoesNotExistException
-     * @throws InvalidPathException
      * @throws MultipleObjectsReturnedException
      * @throws NotFoundException
      */
-    public function findProjectByNode(Node $node): Node
+    public function getForeignIdByNodeId(int $id): string
     {
-        $link = $this->projectLinkMapper->findByNodeId($node->getId());
-        $this->getNodeById($link->getNodeId());
+        $link = $this->projectLinkMapper->findByNodeId($id);
+        return $link->getForeignId();
     }
 
     private function createProjectRoot(string $uid): FileInfo
@@ -127,6 +126,12 @@ class ProjectsStorage
         $nodes = $this->userRootFolder->getById($id);
         $projectNode = $nodes[0];
         return $projectNode;
+    }
+
+    public function unlink(Node $node): void
+    {
+        //TODO: what if link not exists
+        $this->projectLinkMapper->deleteByNodeId($node->getId());
     }
 
 }
