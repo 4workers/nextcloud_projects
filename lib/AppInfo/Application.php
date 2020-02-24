@@ -79,7 +79,7 @@ class Application extends App
         );
         $eventDispatcher->addListener('OCP\Share::preShare', [Hooks::class, 'preShare']);
         $eventDispatcher->addListener('\OCP\Files::preDelete', [Hooks::class, 'preDelete']);
-        //$eventDispatcher->addListener('\OCP\Files::preRename', [Hooks::class, 'preRename']);
+        $eventDispatcher->addListener('\OCP\Files::preRename', [Hooks::class, 'preRename']);
 
     }
 

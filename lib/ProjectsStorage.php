@@ -75,8 +75,8 @@ class ProjectsStorage
      */
     public function findProjectByNode(Node $node): Node
     {
-        $this->projectLinkMapper->findByNodeId($node->getId());
-        return $node;
+        $link = $this->projectLinkMapper->findByNodeId($node->getId());
+        $this->getNodeById($link->getNodeId());
     }
 
     private function createProjectRoot(string $uid): FileInfo
@@ -104,8 +104,7 @@ class ProjectsStorage
     public function allUserProjects(string $uid)
     {
         return array_map(function (ProjectLink $link) {
-            //TODO: what to do if there is to nodes with the same id?
-            return $this->userRootFolder->getById($link->getNodeId())[0];
+            return $this->getNodeById($link->getNodeId());
         }, $this->projectLinkMapper->findByUser($uid));
     }
 
@@ -119,6 +118,14 @@ class ProjectsStorage
         $link->setNodeId($projectNode->getId());
         $link->setForeignId($foreignId);
         $this->projectLinkMapper->insert($link);
+        return $projectNode;
+    }
+
+    private function getNodeById($id)
+    {
+        //TODO: what to do if there is to nodes with the same id?
+        $nodes = $this->userRootFolder->getById($id);
+        $projectNode = $nodes[0];
         return $projectNode;
     }
 
