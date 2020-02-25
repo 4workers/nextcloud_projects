@@ -10,6 +10,7 @@ use Sabre\DAV\INode;
 use Sabre\DAV\PropFind;
 use Sabre\DAV\Server;
 use Sabre\DAV\ServerPlugin;
+use OCA\DAV\Connector\Sabre\Directory;
 
 class PropFindPlugin extends ServerPlugin {
 
@@ -37,6 +38,7 @@ class PropFindPlugin extends ServerPlugin {
 
 
 	public function propFind(PropFind $propFind, INode $node) {
+        if (!($node instanceof Directory)) return;
         try {
             $foreignId = $this->projectsStorage->getForeignIdByNodeId((int)$node->getFileId());
         } catch (DoesNotExistException $e) {
