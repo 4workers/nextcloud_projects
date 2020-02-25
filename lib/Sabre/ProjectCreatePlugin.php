@@ -56,10 +56,14 @@ class ProjectCreatePlugin extends ServerPlugin {
         }
         $projectNode = $this->projectsStorage->createProject($uid, $data['name'], $data['foreign-id']);
         $response->setStatus(201);
-        $response->setHeader('Location', $projectNode->getPath());
+        $urlGenerator = \OC::$server->getURLGenerator();
+        $response->setHeader('content-location', $urlGenerator->getAbsoluteURL($projectNode->getPath()));
         $response->setBody(json_encode([
-            'id' => $projectNode->getId()
+            'id' => $projectNode->getId(),
+            'name' => $projectNode->getName(),
+            'foreign-id' => $data['foreign-id']
         ]));
+        return false;
 	}
 
 }
