@@ -10,6 +10,8 @@ use Sabre\DAV\Exception\Forbidden;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\ICollection;
 
+//TODO: the class should extend OCA\DAV\Connector\Sabre\Directory
+// elsewhere file properties wouldn't be filled
 class ProjectsHome implements ICollection
 {
 
