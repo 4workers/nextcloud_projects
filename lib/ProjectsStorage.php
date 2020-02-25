@@ -151,4 +151,11 @@ class ProjectsStorage
         return $this->getProjectByNode($parent);
     }
 
+    public function isProject(Node $node)
+    {
+        $link = $this->projectLinkMapper->findByNodeId($node->getId());
+        //TODO: What if node not exists
+        return !!$link;
+    }
+
 }

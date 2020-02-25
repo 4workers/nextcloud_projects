@@ -23,15 +23,12 @@ class Hooks
             /** @var IShare $share */
             /** @var GenericEvent $event */
             $share = $event->getSubject();
+            /** @var ProjectsStorage $storage */
             $storage = OC::$server->query(ProjectsStorage::class);
             $node = $share->getNode();
-            try {
-                $storage->find($node->getId());
-            } catch (NotFoundException $e) {
-                //Don't change target if node is not project
-                return;
-            }
-            $projectsRoot = $storage->root($share->getSharedWith());
+            if (!$share->getSharedWith()) return;
+            if (!$storage->isProject($node)) return;
+            $projectsRoot = $storage->projectsRoot($share->getSharedWith());
             $userFolder = OC::$server->getUserFolder($share->getSharedWith());
             $target = $userFolder->getRelativePath($projectsRoot->getPath()) . '/' . $share->getTarget();
             $target = Filesystem::normalizePath($target);
