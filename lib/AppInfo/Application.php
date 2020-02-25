@@ -38,7 +38,8 @@ class Application extends App
                 return new ProjectsStorage(
                     $c->query(ProjectRootLinkMapper::class),
                     $c->query(ProjectLinkMapper::class),
-                    $rootFolder);
+                    $rootFolder
+                );
             }
         );
 

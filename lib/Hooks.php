@@ -20,14 +20,16 @@ class Hooks
     public static function preShare($event)
     {
         try {
-            /** @var IShare $share */
-            /** @var GenericEvent $event */
+            /*** @var IShare $share */
+            /*** @var GenericEvent $event */
             $share = $event->getSubject();
-            /** @var ProjectsStorage $storage */
+            /*** @var ProjectsStorage $storage */
             $storage = OC::$server->query(ProjectsStorage::class);
             $node = $share->getNode();
-            if (!$share->getSharedWith()) return;
-            if (!$storage->isProject($node)) return;
+            if (!$share->getSharedWith()) { return;
+            }
+            if (!$storage->isProject($node)) { return;
+            }
             $projectsRoot = $storage->projectsRoot($share->getSharedWith());
             $userFolder = OC::$server->getUserFolder($share->getSharedWith());
             $target = $userFolder->getRelativePath($projectsRoot->getPath()) . '/' . $share->getTarget();
@@ -42,7 +44,7 @@ class Hooks
     public static function preDelete($event)
     {
         try {
-            /** @var GenericEvent $event */
+            /*** @var GenericEvent $event */
             $subjects = $event->getSubject();
             $subjects = is_array($subjects) ? $subjects : [$subjects];
             $storage = OC::$server->query(ProjectsStorage::class);
@@ -59,7 +61,7 @@ class Hooks
     {
         //TODO: what if node was deleted and hook wasn't runned
         try {
-            /** @var GenericEvent $event */
+            /*** @var GenericEvent $event */
             $subjects = $event->getSubject();
             $subjects = is_array($subjects) ? $subjects : [$subjects];
             $storage = OC::$server->query(ProjectsStorage::class);
@@ -76,13 +78,14 @@ class Hooks
     public static function preRename($event)
     {
         try {
-            /** @var GenericEvent $event */
+            /*** @var GenericEvent $event */
             list($source, $target) = $event->getSubject();
             $storage = OC::$server->query(ProjectsStorage::class);
-            /** @var Node $source */
-            if ($source->getType() !== Node::TYPE_FOLDER) return;
+            /*** @var Node $source */
+            if ($source->getType() !== Node::TYPE_FOLDER) { return;
+            }
             $projectsRoot = $storage->projectsRoot($source->getOwner()->getUID());
-            /** @var Folder $source */
+            /*** @var Folder $source */
             if (static::equalOrContains($source, $projectsRoot)) {
                 throw new ForbiddenException('Project root can\'t be moved or renamed', false);
             }
@@ -94,15 +97,18 @@ class Hooks
 
     private static function equalOrContains(Folder $node, Folder $subNode)
     {
-        if ($node->getId() === $subNode->getId()) return true;
-        if ($node->isSubNode($subNode)) return true;
+        if ($node->getId() === $subNode->getId()) { return true;
+        }
+        if ($node->isSubNode($subNode)) { return true;
+        }
         return false;
     }
 
     private static function forbidDeleteProjectsRoot(Node $node, ProjectsStorage $storage): void
     {
-        /** @var Node $node */
-        if ($node->getType() !== Node::TYPE_FOLDER) return;
+        /*** @var Node $node */
+        if ($node->getType() !== Node::TYPE_FOLDER) { return;
+        }
         $projectsRoot = $storage->projectsRoot($node->getOwner()->getUID());
         if (static::equalOrContains($node, $projectsRoot)) {
             throw new ForbiddenException('Project root can\'t be deleted', false);

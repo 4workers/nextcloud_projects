@@ -22,15 +22,15 @@ class DefaultProjectsBackend implements ProjectsBackend
 
     public function __construct(
         ProjectsStorage $projectsStorage,
-        IRootFolder $rootFolder)
-    {
+        IRootFolder $rootFolder
+    ) {
         $this->rootFolder = $rootFolder;
         $this->projectsStorage = $projectsStorage;
     }
 
     /**
-     * @param array $items
-     * @param IUser $user
+     * @param  array $items
+     * @param  IUser $user
      * @return ProjectSymlink[]
      */
     private function mapToProjects(array $items, IUser $user): array

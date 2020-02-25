@@ -38,8 +38,8 @@ class ProjectsStorage
     public function __construct(
         ProjectRootLinkMapper $projectRootLinkMapper,
         ProjectLinkMapper $projectLinkMapper,
-        IRootFolder $userRootFolder)
-    {
+        IRootFolder $userRootFolder
+    ) {
         $this->projectRootLinkMapper = $projectRootLinkMapper;
         $this->userRootFolder = $userRootFolder;
         $this->projectLinkMapper = $projectLinkMapper;
@@ -66,7 +66,7 @@ class ProjectsStorage
     }
 
     /**
-     * @param int $id
+     * @param  int $id
      * @return int
      * @throws DoesNotExistException
      * @throws MultipleObjectsReturnedException
@@ -102,9 +102,11 @@ class ProjectsStorage
 
     public function allUserProjects(string $uid)
     {
-        return array_map(function (ProjectLink $link) {
-            return $this->getNodeById($link->getNodeId());
-        }, $this->projectLinkMapper->findByUser($uid));
+        return array_map(
+            function (ProjectLink $link) {
+                return $this->getNodeById($link->getNodeId());
+            }, $this->projectLinkMapper->findByUser($uid)
+        );
     }
 
     public function createProject(string $uid, string $name, string $foreignId): Folder
@@ -136,13 +138,15 @@ class ProjectsStorage
 
     /**
      * If node belongs to a project return
+     *
      * @param Node $node
      */
     public function getProjectByNode(Node $node): Folder
     {
         try {
             $nodeId = $node->getId();
-            if (is_null($nodeId)) throw new NotFoundException('Node is outside of a project');
+            if (is_null($nodeId)) { throw new NotFoundException('Node is outside of a project');
+            }
             $link = $this->projectLinkMapper->findByNodeId($nodeId);
             return $this->getNodeById($link->getNodeId());
         } catch (DoesNotExistException $e) {

@@ -12,42 +12,50 @@ use Sabre\DAV\Server;
 use Sabre\DAV\ServerPlugin;
 use OCA\DAV\Connector\Sabre\Directory;
 
-class PropFindPlugin extends ServerPlugin {
+class PropFindPlugin extends ServerPlugin
+{
 
     //TODO: duplicate
     const PROJECT_FOREIGN_ID = '{https://wuerth-it.com/ns}foreign-id';
 
-	/** @var Server */
-	private $server;
+    /**
+     * @var Server 
+     */
+    private $server;
     /**
      * @var ProjectsStorage
      */
     private $projectsStorage;
 
     public function __construct(
-		ProjectsStorage $projectsStorage
-	) {
+        ProjectsStorage $projectsStorage
+    ) {
         $this->projectsStorage = $projectsStorage;
     }
 
-	public function initialize(Server $server) {
-		$this->server = $server;
+    public function initialize(Server $server)
+    {
+        $this->server = $server;
 
-		$this->server->on('propFind', [$this, 'propFind']);
-	}
+        $this->server->on('propFind', [$this, 'propFind']);
+    }
 
 
-	public function propFind(PropFind $propFind, INode $node) {
-        if (!($node instanceof Directory)) return;
+    public function propFind(PropFind $propFind, INode $node)
+    {
+        if (!($node instanceof Directory)) { return;
+        }
         try {
             $foreignId = $this->projectsStorage->getForeignIdByNodeId((int)$node->getFileId());
         } catch (DoesNotExistException $e) {
             return;
         }
 
-		$propFind->handle(self::PROJECT_FOREIGN_ID, function () use ($foreignId) {
-			return $foreignId;
-		});
-	}
+        $propFind->handle(
+            self::PROJECT_FOREIGN_ID, function () use ($foreignId) {
+                return $foreignId;
+            }
+        );
+    }
 
 }

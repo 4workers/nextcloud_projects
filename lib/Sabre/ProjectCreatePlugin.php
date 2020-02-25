@@ -11,35 +11,43 @@ use Sabre\DAV\ServerPlugin;
 use Sabre\HTTP\Request;
 use Sabre\HTTP\Response;
 
-class ProjectCreatePlugin extends ServerPlugin {
+class ProjectCreatePlugin extends ServerPlugin
+{
 
-	const PROJECT_FOREIGN_ID = '{https://wuerth-it.com/ns}foreign-id';
+    const PROJECT_FOREIGN_ID = '{https://wuerth-it.com/ns}foreign-id';
 
-	/** @var Server */
-	private $server;
+    /**
+     * @var Server 
+     */
+    private $server;
 
-	/** @var ProjectsStorage */
-	private $projectsStorage;
+    /**
+     * @var ProjectsStorage 
+     */
+    private $projectsStorage;
 
-	public function __construct(
-		ProjectsStorage $projectsStorage
-	) {
-		$this->projectsStorage = $projectsStorage;
-	}
+    public function __construct(
+        ProjectsStorage $projectsStorage
+    ) {
+        $this->projectsStorage = $projectsStorage;
+    }
 
-	public function initialize(Server $server) {
-		$this->server = $server;
-
-		$this->server->on('method:POST', [$this, 'createProject']);
-	}
-
-	public function getHTTPMethods($path): array
+    public function initialize(Server $server)
     {
-        if (strpos($path, '/dav/projects/') === false) return [];
+        $this->server = $server;
+
+        $this->server->on('method:POST', [$this, 'createProject']);
+    }
+
+    public function getHTTPMethods($path): array
+    {
+        if (strpos($path, '/dav/projects/') === false) { return [];
+        }
         return ['POST'];
     }
 
-    public function createProject(Request $request, Response $response) {
+    public function createProject(Request $request, Response $response)
+    {
         $stream = $request->getBody();
         $data = [];
         if (is_resource($stream)) {
@@ -58,12 +66,16 @@ class ProjectCreatePlugin extends ServerPlugin {
         $response->setStatus(201);
         $urlGenerator = \OC::$server->getURLGenerator();
         $response->setHeader('content-location', $urlGenerator->getAbsoluteURL($projectNode->getPath()));
-        $response->setBody(json_encode([
-            'id' => $projectNode->getId(),
-            'name' => $projectNode->getName(),
-            'foreign-id' => $data['foreign-id']
-        ]));
+        $response->setBody(
+            json_encode(
+                [
+                'id' => $projectNode->getId(),
+                'name' => $projectNode->getName(),
+                'foreign-id' => $data['foreign-id']
+                ]
+            )
+        );
         return false;
-	}
+    }
 
 }
