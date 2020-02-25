@@ -14,12 +14,12 @@ class ProjectsHome implements ICollection
 {
 
     /**
-     * @var array 
+     * @var array
      */
     private $principalInfo;
 
     /**
-     * @var IUser 
+     * @var IUser
      */
     private $user;
     /**
@@ -50,17 +50,17 @@ class ProjectsHome implements ICollection
 
     public function setName($name)
     {
-        throw new Forbidden('Permission denied to rename this trashbin');
+        throw new Forbidden('Permission denied to rename the projects root');
     }
 
     public function createFile($name, $data = null)
     {
-        throw new Forbidden('Not allowed to create files in the trashbin');
+        throw new Forbidden('Not allowed to create files in the projects root');
     }
 
     public function createDirectory($name)
     {
-        throw new Forbidden('Not allowed to create folders in the trashbin');
+        throw new Forbidden('Not allowed to create folders in the projects root');
     }
 
     public function getChild($name)
@@ -75,7 +75,7 @@ class ProjectsHome implements ICollection
 
     public function childExists($name): bool
     {
-        return $name === 'restore' || $name === 'trash';
+        throw new NotImplemented();
     }
 
     public function getLastModified(): int
