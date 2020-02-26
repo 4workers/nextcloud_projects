@@ -73,9 +73,6 @@ class Application extends App
             'OCA\Files::loadAdditionalScripts', function () {
                 script('projects', 'filelist_plugin');
                 style('projects', 'filelist');
-                /* @var IInitialStateService $state */
-                $state = $this->getContainer()->query(IInitialStateService::class);
-                $state->provideInitialState('projects', 'project-icon', image_path('projects', 'folder.svg'));
             }
         );
         $eventDispatcher->addListener('OCP\Share::preShare', [Hooks::class, 'preShare']);
