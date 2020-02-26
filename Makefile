@@ -155,3 +155,6 @@ appstore:
 test: composer
 	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.xml
 	$(CURDIR)/vendor/phpunit/phpunit/phpunit -c phpunit.integration.xml
+
+lint-fix:
+	$(CURDIR)/vendor/bin/phpcbf --standard=PEAR ./lib

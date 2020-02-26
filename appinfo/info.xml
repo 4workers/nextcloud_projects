@@ -15,4 +15,17 @@
     <dependencies>
         <nextcloud min-version="18" max-version="19"/>
     </dependencies>
+    <sabre>
+        <collections>
+            <collection>OCA\Projects\Sabre\RootCollection</collection>
+        </collections>
+        <plugins>
+            <plugin>OCA\Projects\Sabre\ProjectCreatePlugin</plugin>
+            <plugin>OCA\Projects\Sabre\PropFindPlugin</plugin>
+        </plugins>
+    </sabre>
+    <types>
+        <dav/>
+        <filesystem/>
+    </types>
 </info>

@@ -13,7 +13,7 @@ require_once __DIR__.'/../../../lib/base.php';
 \OC_App::loadApp('projects');
 
 if(!class_exists('PHPUnit_Framework_TestCase')) {
-    require_once('PHPUnit/Autoload.php');
+    include_once 'PHPUnit/Autoload.php';
 }
 
 OC_Hook::clear();

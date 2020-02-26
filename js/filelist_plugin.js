@@ -1,12 +1,20 @@
 (function (OCA) {
 
 	_.extend(OC.Files.Client, {
-		PROPERTY_FOREIGN_ID: '{' + OC.Files.Client.NS_OWNCLOUD + '}foreign-id',
+		PROPERTY_FOREIGN_ID: '{https://wuerth-it.com/ns}foreign-id',
 	});
 
 
 	OCA.Files = OCA.Files || {};
 
+	function renderProjectIcon () {
+		//TODO: i18n
+		//TODO: use templates instead
+		return `<div class="project-mark permanent">
+					<span class="icon icon-project"></span>
+					<span class="hidden-visually">Project</span>
+				</div>`;
+	}
 	/**
 	 * Extends file list to highlight projects
 	 *
@@ -26,9 +34,17 @@
 				var $tr = oldCreateRow.apply(this, arguments);
 				if (fileData.foreignId) {
 					$tr.attr('data-foreign-id', fileData.foreignId);
-					$tr.addClass('is-project');
+					var $icon = $(renderProjectIcon());
+					$tr.find('td.filename .thumbnail').append($icon);
 				}
 				return $tr;
+			};
+
+			var oldElementToFile = fileList.elementToFile;
+			fileList.elementToFile = function ($el) {
+				var data = oldElementToFile.apply(this, arguments);
+				data.foreignId = $el.attr('data-foreign-id');
+				return data;
 			};
 
 			var oldGetWebdavProperties = fileList._getWebdavProperties;
@@ -44,7 +60,6 @@
 				var foreignId = props[OC.Files.Client.PROPERTY_FOREIGN_ID];
 				if (foreignId) {
 					data.foreignId = foreignId;
-					data.icon = OCP.InitialState.loadState('projects', 'project-icon');
 				}
 				return data;
 			});
