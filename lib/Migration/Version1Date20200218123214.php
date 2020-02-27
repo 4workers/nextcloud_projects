@@ -33,7 +33,7 @@ class Version1Date20200218123214 extends SimpleMigrationStep
     public function changeSchema(IOutput $output, Closure $schemaClosure, array $options)
     {
         /**
-    * @var ISchemaWrapper $schema 
+    * @var ISchemaWrapper $schema
 */
         //TODO: add foreign key constrains
         $schema = $schemaClosure();
@@ -100,6 +100,7 @@ class Version1Date20200218123214 extends SimpleMigrationStep
             $table->setPrimaryKey(['id']);
             $table->addIndex(['root_id'], 'root_id_index');
             $table->addIndex(['node_id'], 'node_id_index');
+            $table->addUniqueIndex(['foreign_id'], 'foreign_id_unique');
         }
         return $schema;
     }

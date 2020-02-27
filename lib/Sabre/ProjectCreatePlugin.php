@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\Projects\Sabre;
 
 use OCA\Projects\ProjectsStorage;
+use OCP\AppFramework\Db\DoesNotExistException;
 use Sabre\DAV\Exception\BadRequest;
 use Sabre\DAV\Server;
 use Sabre\DAV\ServerPlugin;
@@ -17,12 +18,12 @@ class ProjectCreatePlugin extends ServerPlugin
     const PROJECT_FOREIGN_ID = '{https://wuerth-it.com/ns}foreign-id';
 
     /**
-     * @var Server 
+     * @var Server
      */
     private $server;
 
     /**
-     * @var ProjectsStorage 
+     * @var ProjectsStorage
      */
     private $projectsStorage;
 
@@ -62,7 +63,11 @@ class ProjectCreatePlugin extends ServerPlugin
         if (!array_key_exists('foreign-id', $data)) {
             throw new BadRequest('Provide foreign id of the project');
         }
-        $projectNode = $this->projectsStorage->createProject($uid, $data['name'], $data['foreign-id']);
+        try {
+            $projectNode = $this->projectsStorage->findByForeignId($data['foreign-id']);
+        } catch (DoesNotExistException $e) {
+            $projectNode = $this->projectsStorage->createProject($uid, $data['name'], $data['foreign-id']);
+        }
         $response->setStatus(201);
         $urlGenerator = \OC::$server->getURLGenerator();
         $response->setHeader('content-location', $urlGenerator->getAbsoluteURL($projectNode->getPath()));

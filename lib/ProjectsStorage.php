@@ -162,4 +162,11 @@ class ProjectsStorage
         return !!$link;
     }
 
+    public function findByForeignId($id)
+    {
+        $link = $this->projectLinkMapper->findByForeignId($id);
+        //TODO: What if node not exists
+        return $this->getNodeById($link->getNodeId());
+    }
+
 }

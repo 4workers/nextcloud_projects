@@ -100,4 +100,17 @@ class ProjectLinkMapper extends QBMapper
         return $this->findEntities($qb);
     }
 
+    public function findByForeignId($id)
+    {
+        $qb = $this->db->getQueryBuilder();
+
+        $qb->select('*')
+            ->from($this->table)
+            ->where(
+                $qb->expr()->eq('foreign_id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_STR))
+            );
+
+        return $this->findEntity($qb);
+    }
+
 }
