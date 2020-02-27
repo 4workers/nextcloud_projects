@@ -5,7 +5,7 @@
     <name>Projects</name>
     <summary>Projects folders in your nextcloud</summary>
     <description><![CDATA[Later]]></description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <licence>agpl</licence>
     <author mail="husband.sergey@gmail.com" homepage="https://github.com/matchish">Serhii Shliakhov</author>
     <namespace>Projects</namespace>
