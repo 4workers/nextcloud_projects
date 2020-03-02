@@ -60,8 +60,8 @@ class Version1Date20200218123214 extends SimpleMigrationStep
                 ]
             );
             $table->setPrimaryKey(['id']);
-            $table->addIndex(['node_id'], 'node_id_index');
-            $table->addUniqueIndex(['owner'], 'owner_index');
+            $table->addIndex(['node_id'], 'root_node_id_idx');
+            $table->addUniqueIndex(['owner'], 'owner_u');
         }
 
         if (!$schema->hasTable('projects_links')) {
@@ -98,9 +98,9 @@ class Version1Date20200218123214 extends SimpleMigrationStep
                 ]
             );
             $table->setPrimaryKey(['id']);
-            $table->addIndex(['root_id'], 'root_id_index');
-            $table->addIndex(['node_id'], 'node_id_index');
-            $table->addUniqueIndex(['foreign_id'], 'foreign_id_unique');
+            $table->addIndex(['root_id'], 'root_id_idx');
+            $table->addIndex(['node_id'], 'node_id_idx');
+            $table->addUniqueIndex(['foreign_id'], 'foreign_id_u');
         }
         return $schema;
     }
