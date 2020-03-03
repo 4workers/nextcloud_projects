@@ -4,6 +4,8 @@ services:
     image: nextcloud
     volumes:
       - nextcloudStore:/var/www/html
+      - ./:/var/www/html/projects
+      - ./config/apps.config.php:/var/www/html/config/apps.config.php
     ports:
       - "16000:80"
     environment:
