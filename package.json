@@ -9,9 +9,9 @@
   },
   "scripts": {
     "build": "echo 'nothing to build'",
-    "docker": "docker-compose down docker-compose-cleanup.yml -v && docker-compose up -d",
+    "docker": "docker-compose -f docker-compose-cleanup.yml down -v && docker-compose up -d",
     "lint": "tslint --project tsconfig.json",
-    "test": "npm run docker && ts-node tests/acceptance/prepare-docker-nextcloud-container.ts && jest --runInBand; docker-compose docker-compose-cleanup.yml down -v",
+    "test": "npm run docker && ts-node tests/acceptance/prepare-docker-nextcloud-container.ts && jest --runInBand; docker-compose -f docker-compose-cleanup.yml down -v",
     "test-watch": "npm run docker && ts-node tests/acceptance/prepare-docker-nextcloud-container.ts && jest --runInBand --watch",
     "fast-test-watch": "ts-node tests/acceptance/prepare-docker-nextcloud-container.ts && jest --runInBand --watch",
     "fast-test-watch-nostart": "ts-node tests/acceptance/prepare-docker-nextcloud-container.ts && jest --runInBand --watch --testNamePattern=stopTestingAtStart"
