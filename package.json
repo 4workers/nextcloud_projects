@@ -1,7 +1,7 @@
 {
-  "name": "projects",
+  "name": "squeegee",
   "version": "1.0.0",
-  "description": "Projects folders in your nextcloud",
+  "description": "Squeegee mod for nextcloud",
   "main": "filelist_plugin.js",
   "directories": {
     "lib": "lib",
@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/squeegeeOrg/nextcloud_projects.git"
+    "url": "git+https://github.com/squeegeeOrg/nextcloud-squeegee.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/squeegeeOrg/nextcloud_projects/issues"
+    "url": "https://github.com/squeegeeOrg/nextcloud-squeegee/issues"
   },
-  "homepage": "https://github.com/squeegeeOrg/nextcloud_projects#readme",
+  "homepage": "https://github.com/squeegeeOrg/nextcloud-squeegee#readme",
   "devDependencies": {
     "@types/cheerio": "^0.22.16",
     "@types/jest": "^24.0.11",
