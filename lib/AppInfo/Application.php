@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace OCA\Projects\AppInfo;
 
+use GuzzleHttp\Client;
 use OC;
+use OCA\DAV\CalDAV\Proxy\ProxyMapper;
+use OCA\DAV\Connector\Sabre\Principal;
+use OCA\Projects\Connector\Connector;
 use OCA\Projects\Database\ProjectRootLinkMapper;
+use OCA\Projects\DefaultProjectsBackend;
 use OCA\Projects\Hooks;
 use OCA\Projects\ProjectsManager;
 use OCA\Projects\ProjectsStorage;
-use OCA\Projects\DefaultProjectsBackend;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IDBConnection;
-use OCP\IInitialStateService;
-use OCA\DAV\CalDAV\Proxy\ProxyMapper;
-use OCA\DAV\Connector\Sabre\Principal;
 
 class Application extends App
 {
@@ -57,6 +58,12 @@ class Application extends App
             }
         );
 
+        $container->registerService(
+            Connector::class, function ($c) {
+            return new Connector(new Client(['base_uri' => getenv('WURTH_CONNECTOR_URL')]));
+        }
+        );
+
         $server = $container->getServer();
 
         $projectsManager = $server->query(ProjectsManager::class);
@@ -80,6 +87,8 @@ class Application extends App
         $eventDispatcher->addListener('\OCP\Files::postDelete', [Hooks::class, 'postDelete']);
         $eventDispatcher->addListener('\OCP\Files::preRename', [Hooks::class, 'preRename']);
 
+        $eventDispatcher = $this->getContainer()->query(IEventDispatcher::class);
+        $eventDispatcher->addListener('\OCP\Files::postCreate', [\OCA\Projects\Connector\Hooks::class, 'postCreateFile']);
     }
 
 }
