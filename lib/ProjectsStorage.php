@@ -82,9 +82,9 @@ class ProjectsStorage
     {
         //TODO: wrap in transaction
         try {
-            $root = $this->userRootFolder->getUserFolder($uid)->get(getenv('PROJECTS_ROOT'));
+            $root = $this->userRootFolder->getUserFolder($uid)->get(getenv('SQUEEGEE_PROJECTS_ROOT'));
         } catch (NotFoundException $e) {
-            $root = $this->userRootFolder->getUserFolder($uid)->newFolder(getenv('PROJECTS_ROOT'));
+            $root = $this->userRootFolder->getUserFolder($uid)->newFolder(getenv('SQUEEGEE_PROJECTS_ROOT'));
         }
         $uid = $root->getOwner()->getUID();
         try {
