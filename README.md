@@ -1,6 +1,12 @@
 # Projects
 Place this app in **nextcloud/apps/**
 
+Set env variables
+```
+SQUEEGEE_CONNECTOR_URL='URl to connector'
+SQUEEGEE_PROJECTS_ROOT='Projects root path'
+```
+
 ## Building the app
 
 The app can be built by using the provided Makefile by running:
