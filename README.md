@@ -3,8 +3,8 @@ Place this app in **nextcloud/apps/**
 
 Set env variables
 ```
-SQUEEGEE_CONNECTOR_URL='URl to connector'
-SQUEEGEE_PROJECTS_ROOT='Projects root path'
+SQUEEGEE_CONNECTOR_URL='localhost:8000'
+SQUEEGEE_PROJECTS_ROOT='/projects'
 ```
 
 ## Building the app
