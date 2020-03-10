@@ -10,11 +10,12 @@ use OCA\Projects\Database\ProjectLink;
 use OCA\Projects\Database\ProjectLinkMapper;
 use OCA\Projects\Database\ProjectRootLink;
 use OCA\Projects\Database\ProjectRootLinkMapper;
-use OCP\AppFramework\Db\DoesNotExistException;
+use OCA\Projects\Exception\DoesNotExistException;
+use OCA\Projects\Exception\ProjectsRootAlreadyExistsException;
+use OCP\AppFramework\Db\DoesNotExistException as DoesNotExistExceptionDb;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\Files\FileInfo;
 use OCP\Files\Folder;
-use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\Files\NotFoundException;
@@ -45,6 +46,12 @@ class ProjectsStorage
         $this->projectLinkMapper = $projectLinkMapper;
     }
 
+    /**
+     * @param string $uid
+     * @return Folder
+     * @throws DoesNotExistException
+     * @throws MultipleObjectsReturnedException
+     */
     public function projectsRoot(string $uid): Folder
     {
         $root = null;
@@ -55,12 +62,12 @@ class ProjectsStorage
                 throw new DomainException('Projects root can be only one');
             }
             if (!count($nodes)) {
-                $root = $this->createProjectRoot($uid);
+                throw new DoesNotExistException('No projects root found for the user');
             } else {
                 $root = $nodes[0];
             }
-        } catch (DoesNotExistException $e) {
-            $root = $this->createProjectRoot($uid);
+        } catch (DoesNotExistExceptionDb $e) {
+            throw new DoesNotExistException('No projects root found for the user');
         }
         return $root;
     }
@@ -68,7 +75,7 @@ class ProjectsStorage
     /**
      * @param  int $id
      * @return int
-     * @throws DoesNotExistException
+     * @throws DoesNotExistExceptionDb
      * @throws MultipleObjectsReturnedException
      * @throws NotFoundException
      */
@@ -78,11 +85,17 @@ class ProjectsStorage
         return $link->getForeignId();
     }
 
-    private function createProjectRoot(string $uid): FileInfo
+    /**
+     * @param string $uid
+     * @return FileInfo
+     * @throws ProjectsRootAlreadyExistsException
+     */
+    public function createProjectsRoot(string $uid): FileInfo
     {
         //TODO: wrap in transaction
         try {
-            $root = $this->userRootFolder->getUserFolder($uid)->get(getenv('SQUEEGEE_PROJECTS_ROOT'));
+            $this->userRootFolder->getUserFolder($uid)->get(getenv('SQUEEGEE_PROJECTS_ROOT'));
+            throw new ProjectsRootAlreadyExistsException();
         } catch (NotFoundException $e) {
             $root = $this->userRootFolder->getUserFolder($uid)->newFolder(getenv('SQUEEGEE_PROJECTS_ROOT'));
         }
@@ -91,7 +104,7 @@ class ProjectsStorage
             $link = $this->projectRootLinkMapper->findByUser($uid);
             $link->setNodeId($root->getId());
             $this->projectRootLinkMapper->update($link);
-        } catch (DoesNotExistException $e) {
+        } catch (DoesNotExistExceptionDb $e) {
             $link = new ProjectRootLink();
             $link->setOwner($uid);
             $link->setNodeId($root->getId());
@@ -149,7 +162,7 @@ class ProjectsStorage
             }
             $link = $this->projectLinkMapper->findByNodeId($nodeId);
             return $this->getNodeById($link->getNodeId());
-        } catch (DoesNotExistException $e) {
+        } catch (DoesNotExistExceptionDb $e) {
             $parent = $node->getParent();
         }
         return $this->getProjectByNode($parent);

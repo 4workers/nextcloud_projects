@@ -9,15 +9,18 @@ use OC;
 use OCA\DAV\CalDAV\Proxy\ProxyMapper;
 use OCA\DAV\Connector\Sabre\Principal;
 use OCA\Projects\Connector\Connector;
+use OCA\Projects\Connector\Hooks;
 use OCA\Projects\Database\ProjectLinkMapper;
 use OCA\Projects\Database\ProjectRootLinkMapper;
 use OCA\Projects\DefaultProjectsBackend;
-use OCA\Projects\Hooks;
+use OCA\Projects\FileHooks;
 use OCA\Projects\ProjectsManager;
 use OCA\Projects\ProjectsStorage;
+use OCA\Projects\UserHooks;
 use OCP\AppFramework\App;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IDBConnection;
+use OCP\User\Events\UserCreatedEvent;
 
 class Application extends App
 {
@@ -84,13 +87,14 @@ class Application extends App
                 style('squeegee', 'filelist');
             }
         );
-        $eventDispatcher->addListener('OCP\Share::preShare', [Hooks::class, 'preShare']);
-        $eventDispatcher->addListener('\OCP\Files::preDelete', [Hooks::class, 'preDelete']);
-        $eventDispatcher->addListener('\OCP\Files::postDelete', [Hooks::class, 'postDelete']);
-        $eventDispatcher->addListener('\OCP\Files::preRename', [Hooks::class, 'preRename']);
+        $eventDispatcher->addListener('OCP\Share::preShare', [FileHooks::class, 'preShare']);
+        $eventDispatcher->addListener('\OCP\Files::preDelete', [FileHooks::class, 'preDelete']);
+        $eventDispatcher->addListener('\OCP\Files::postDelete', [FileHooks::class, 'postDelete']);
+        $eventDispatcher->addListener('\OCP\Files::preRename', [FileHooks::class, 'preRename']);
+        $eventDispatcher->addListener(UserCreatedEvent::class, [UserHooks::class, 'postCreate']);
 
         $eventDispatcher = $this->getContainer()->query(IEventDispatcher::class);
-        $eventDispatcher->addListener('\OCP\Files::postCreate', [\OCA\Projects\Connector\Hooks::class, 'postCreateFile']);
+        $eventDispatcher->addListener('\OCP\Files::postCreate', [Hooks::class, 'postCreateFile']);
     }
 
 }

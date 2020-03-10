@@ -14,7 +14,7 @@ use OCP\Files\NotFoundException;
 use Throwable;
 use OC\HintException;
 
-class Hooks
+class FileHooks
 {
 
     public static function preShare($event)
