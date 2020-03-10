@@ -5,7 +5,7 @@ use OCA\Projects\Exception\InvalidConfigException;
 
 $projectsRootPath = getenv('SQUEEGEE_PROJECTS_ROOT');
 if (!$projectsRootPath) {
-    throw new InvalidConfigException('Projects root not defined. SQUEEGEE_SQUEEGEE_PROJECTS_ROOT env variable is required.');
+    throw new InvalidConfigException('Projects root not defined. SQUEEGEE_PROJECTS_ROOT env variable is required.');
 }
 $baseUrl = getenv('SQUEEGEE_CONNECTOR_URL');
 if (!$baseUrl) {
