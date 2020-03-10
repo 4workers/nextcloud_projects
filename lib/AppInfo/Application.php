@@ -9,6 +9,7 @@ use OC;
 use OCA\DAV\CalDAV\Proxy\ProxyMapper;
 use OCA\DAV\Connector\Sabre\Principal;
 use OCA\Projects\Connector\Connector;
+use OCA\Projects\Database\ProjectLinkMapper;
 use OCA\Projects\Database\ProjectRootLinkMapper;
 use OCA\Projects\DefaultProjectsBackend;
 use OCA\Projects\Hooks;
@@ -34,7 +35,7 @@ class Application extends App
         );
 
         $container->registerService(
-            ProjectStorage::class, function ($c) {
+            ProjectsStorage::class, function ($c) {
                 $rootFolder = $c->query('ServerContainer')->getRootFolder();
                 return new ProjectsStorage(
                     $c->query(ProjectRootLinkMapper::class),
@@ -60,7 +61,7 @@ class Application extends App
 
         $container->registerService(
             Connector::class, function ($c) {
-            return new Connector(new Client(['base_uri' => getenv('WURTH_CONNECTOR_URL')]));
+            return new Connector(new Client(['base_uri' => getenv('SQUEEGEE_CONNECTOR_URL')]));
         }
         );
 
@@ -78,8 +79,9 @@ class Application extends App
         $eventDispatcher = $this->getContainer()->query(IEventDispatcher::class);
         $eventDispatcher->addListener(
             'OCA\Files::loadAdditionalScripts', function () {
-                script('projects', 'filelist_plugin');
-                style('projects', 'filelist');
+//                TODO:Load app name from app info
+                script('squeegee', 'filelist_plugin');
+                style('squeegee', 'filelist');
             }
         );
         $eventDispatcher->addListener('OCP\Share::preShare', [Hooks::class, 'preShare']);
