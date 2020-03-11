@@ -1,7 +1,8 @@
 (function (OCA) {
 
 	_.extend(OC.Files.Client, {
-		PROPERTY_FOREIGN_ID: '{https://wuerth-it.com/ns}foreign-id',
+		PROPERTY_FOREIGN_ID: '{https://squeegee.com/ns}foreign-id',
+		PROPERTY_IS_PROJECT: '{https://squeegee.com/ns}is-project',
 	});
 
 
@@ -34,6 +35,8 @@
 				var $tr = oldCreateRow.apply(this, arguments);
 				if (fileData.foreignId) {
 					$tr.attr('data-foreign-id', fileData.foreignId);
+				}
+				if (fileData.isProject) {
 					var $icon = $(renderProjectIcon());
 					$tr.find('td.filename .thumbnail').append($icon);
 				}
@@ -51,6 +54,7 @@
 			fileList._getWebdavProperties = function () {
 				var props = oldGetWebdavProperties.apply(this, arguments);
 				props.push(OC.Files.Client.PROPERTY_FOREIGN_ID);
+				props.push(OC.Files.Client.PROPERTY_IS_PROJECT);
 				return props;
 			};
 
@@ -61,6 +65,7 @@
 				if (foreignId) {
 					data.foreignId = foreignId;
 				}
+				data.isProject = props[OC.Files.Client.PROPERTY_IS_PROJECT];
 				return data;
 			});
 		},

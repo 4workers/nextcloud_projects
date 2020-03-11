@@ -14,9 +14,7 @@ use Sabre\HTTP\Response;
 
 class ProjectCreatePlugin extends ServerPlugin
 {
-
-    const PROJECT_FOREIGN_ID = '{https://wuerth-it.com/ns}foreign-id';
-
+    
     /**
      * @var Server
      */

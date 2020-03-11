@@ -15,11 +15,12 @@ use OCA\DAV\Connector\Sabre\Directory;
 class PropFindPlugin extends ServerPlugin
 {
 
-    //TODO: duplicate
-    const PROJECT_FOREIGN_ID = '{https://wuerth-it.com/ns}foreign-id';
+    //TODO: move to appinfo.xml
+    const PROPERTY_FOREIGN_ID = '{https://squeegee.com/ns}foreign-id';
+    const PROPERTY_IS_PROJECT = '{https://squeegee.com/ns}is-project';
 
     /**
-     * @var Server 
+     * @var Server
      */
     private $server;
     /**
@@ -52,8 +53,13 @@ class PropFindPlugin extends ServerPlugin
         }
 
         $propFind->handle(
-            self::PROJECT_FOREIGN_ID, function () use ($foreignId) {
+            self::PROPERTY_FOREIGN_ID, function () use ($foreignId) {
                 return $foreignId;
+            }
+        );
+        $propFind->handle(
+            self::PROPERTY_IS_PROJECT, function () use ($foreignId) {
+                return true;
             }
         );
     }
