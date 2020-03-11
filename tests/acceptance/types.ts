@@ -1,4 +1,4 @@
-interface Resolution {
+export interface Resolution {
     title: string
     w: number
     h: number

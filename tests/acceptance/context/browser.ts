@@ -1,6 +1,6 @@
 import * as puppeteer from 'puppeteer';
 import config from '../config';
-import {BrowserContextConfig} from '../types';
+import {BrowserContextConfig, Resolution} from '../types';
 
 export class Browser {
 
@@ -27,6 +27,10 @@ export class Browser {
         });
         this.pageBase = await this.browser.newPage();
         this.pageBase.setDefaultNavigationTimeout(60000);
+    }
+
+    resolutions = (): Array<Resolution> => {
+        return this.config.resolutions;
     }
 
     static default() {
