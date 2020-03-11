@@ -28,4 +28,9 @@
         <dav/>
         <filesystem/>
     </types>
+    <squeegee>
+        <projects>
+            <root>/Projects</root>
+        </projects>
+    </squeegee>
 </info>

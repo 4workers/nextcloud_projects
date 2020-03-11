@@ -35,15 +35,21 @@ class ProjectsStorage
      * @var ProjectLinkMapper
      */
     private $projectLinkMapper;
+    /**
+     * @var ProjectsRootPath
+     */
+    private $projectsRootPath;
 
     public function __construct(
         ProjectRootLinkMapper $projectRootLinkMapper,
         ProjectLinkMapper $projectLinkMapper,
-        IRootFolder $userRootFolder
+        IRootFolder $userRootFolder,
+        ProjectsRootPath $projectsRootPath
     ) {
         $this->projectRootLinkMapper = $projectRootLinkMapper;
         $this->userRootFolder = $userRootFolder;
         $this->projectLinkMapper = $projectLinkMapper;
+        $this->projectsRootPath = $projectsRootPath;
     }
 
     /**
@@ -94,10 +100,10 @@ class ProjectsStorage
     {
         //TODO: wrap in transaction
         try {
-            $this->userRootFolder->getUserFolder($uid)->get(getenv('SQUEEGEE_PROJECTS_ROOT'));
+            $this->userRootFolder->getUserFolder($uid)->get((string) $this->projectsRootPath);
             throw new ProjectsRootAlreadyExistsException();
         } catch (NotFoundException $e) {
-            $root = $this->userRootFolder->getUserFolder($uid)->newFolder(getenv('SQUEEGEE_PROJECTS_ROOT'));
+            $root = $this->userRootFolder->getUserFolder($uid)->newFolder((string) $this->projectsRootPath);
         }
         $uid = $root->getOwner()->getUID();
         try {

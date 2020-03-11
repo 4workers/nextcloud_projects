@@ -15,6 +15,7 @@ use OCA\Projects\Database\ProjectRootLinkMapper;
 use OCA\Projects\DefaultProjectsBackend;
 use OCA\Projects\FileHooks;
 use OCA\Projects\ProjectsManager;
+use OCA\Projects\ProjectsRootPath;
 use OCA\Projects\ProjectsStorage;
 use OCA\Projects\UserHooks;
 use OCP\AppFramework\App;
@@ -27,9 +28,18 @@ class Application extends App
 
     public function __construct()
     {
-        parent::__construct('projects');
+        parent::__construct('squeegee');
 
         $container = $this->getContainer();
+
+        $container->registerService(
+            ProjectsRootPath::class, function ($c) {
+            $server = $c->getServer();
+            $appManager = $server->getAppManager();
+            $appInfo = $appManager->getAppInfo('squeegee');
+            return new ProjectsRootPath(getenv('SQUEEGEE_PROJECTS_ROOT'), $appInfo);
+        }
+        );
 
         $container->registerService(
             ProjectRootLinkMapper::class, function ($c) {
@@ -43,7 +53,8 @@ class Application extends App
                 return new ProjectsStorage(
                     $c->query(ProjectRootLinkMapper::class),
                     $c->query(ProjectLinkMapper::class),
-                    $rootFolder
+                    $rootFolder,
+                    $c->query(ProjectsRootPath::class),
                 );
             }
         );
