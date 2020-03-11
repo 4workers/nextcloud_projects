@@ -36,6 +36,7 @@ class Hooks
         $projectStorage = OC::$server->query(ProjectsStorage::class);
         $event = PostCreate::create($node, $projectStorage);
         $connector = OC::$server->query(Connector::class);
+        //TODO: rollback file creating if error on send event
         $connector->send($event);
     }
 
