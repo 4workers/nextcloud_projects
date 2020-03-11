@@ -56,3 +56,48 @@ or:
     phpunit -c phpunit.integration.xml
 
 for integration tests
+
+## Projects root API examples
+
+#### Projects list
+Curl example to get projects list for user `matchish`
+```
+curl --location --request PROPFIND 'http://localhost/remote.php/dav/projects/matchish' \
+--data-raw '<?xml version="1.0"?>
+<d:propfind  xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns" xmlns:ocs="http://open-collaboration-services.org/ns">
+  <d:prop>
+    <d:getlastmodified />
+    <d:getetag />
+    <d:getcontenttype />
+    <d:resourcetype />
+    <oc:fileid />
+    <oc:permissions />
+    <oc:size />
+    <d:getcontentlength />
+    <nc:has-preview />
+    <nc:mount-type />
+    <nc:is-encrypted />
+    <ocs:share-permissions />
+    <oc:tags />
+    <oc:favorite />
+    <x:foreign-id xmlns:x="https://squeegee.com/ns" />
+    <x:is-project xmlns:x="https://squeegee.com/ns" />
+    <oc:comments-unread />
+    <oc:owner-id />
+    <oc:owner-display-name />
+    <oc:share-types />
+  </d:prop>
+</d:propfind>'
+```
+
+#### Add project
+Curl example to add new project `squeegee` with foreign id `uuid` for user `matchish`
+
+```
+curl --location --request POST 'http://localhost/remote.php/dav/projects/matchish/' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"name": "squeegee",
+	"foreign-id": "uuid"
+}'
+```
