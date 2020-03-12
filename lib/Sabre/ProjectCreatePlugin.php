@@ -58,13 +58,13 @@ class ProjectCreatePlugin extends ServerPlugin
         $uid = array_pop(explode('/', trim($request->getPath(), '/')));
         //TODO create in transaction
         $user = \OC::$server->getUserManager()->get($uid);
-        if (!$user) {
-            throw new NotFound();
-        }
         $currentUser = \OC::$server->getUserSession()->getUser();
         //TODO: remove after close all todos in the method
         if ($currentUser->getUID() !== $user->getUID()) {
             throw new Forbidden();
+        }
+        if (!$user) {
+            throw new NotFound();
         }
         $currentUserIsAdmin = \OC::$server->getGroupManager()->isAdmin($currentUser->getUID());
         if (!$currentUserIsAdmin) {
