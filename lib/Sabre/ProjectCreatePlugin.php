@@ -7,6 +7,8 @@ namespace OCA\Projects\Sabre;
 use OCA\Projects\ProjectsStorage;
 use OCP\AppFramework\Db\DoesNotExistException;
 use Sabre\DAV\Exception\BadRequest;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\Server;
 use Sabre\DAV\ServerPlugin;
 use Sabre\HTTP\Request;
@@ -14,7 +16,7 @@ use Sabre\HTTP\Response;
 
 class ProjectCreatePlugin extends ServerPlugin
 {
-    
+
     /**
      * @var Server
      */
@@ -40,21 +42,34 @@ class ProjectCreatePlugin extends ServerPlugin
 
     public function getHTTPMethods($path): array
     {
-        if (strpos($path, '/dav/projects/') === false) { return [];
+        if (strpos($path, 'projects/') === false) { return [];
         }
         return ['POST'];
     }
 
     public function createProject(Request $request, Response $response)
     {
+        if (strpos($request->getPath(), 'projects/') === false) return;
         $stream = $request->getBody();
         $data = [];
         if (is_resource($stream)) {
             $data = json_decode(stream_get_contents($stream), true);
         }
+        $uid = array_pop(explode('/', trim($request->getPath(), '/')));
         //TODO create in transaction
-        $user = \OC::$server->getUserSession()->getUser();
-        $uid = $user->getUID();
+        $user = \OC::$server->getUserManager()->get($uid);
+        if (!$user) {
+            throw new NotFound();
+        }
+        $currentUser = \OC::$server->getUserSession()->getUser();
+        //TODO: remove after close all todos in the method
+        if ($currentUser->getUID() !== $user->getUID()) {
+            throw new Forbidden();
+        }
+        $currentUserIsAdmin = \OC::$server->getGroupManager()->isAdmin($currentUser->getUID());
+        if (!$currentUserIsAdmin) {
+            throw new Forbidden();
+        }
         if (!array_key_exists('name', $data)) {
             throw new BadRequest('Provide project name');
         }
@@ -62,9 +77,10 @@ class ProjectCreatePlugin extends ServerPlugin
             throw new BadRequest('Provide foreign id of the project');
         }
         try {
+            //TODO: what if this project not belong current user or shared(owner is someone else)
             $projectNode = $this->projectsStorage->findByForeignId($data['foreign-id']);
         } catch (DoesNotExistException $e) {
-            $projectNode = $this->projectsStorage->createProject($uid, $data['name'], $data['foreign-id']);
+            $projectNode = $this->projectsStorage->createProject($user->getUID(), $data['name'], $data['foreign-id']);
         }
         $response->setStatus(201);
         $urlGenerator = \OC::$server->getURLGenerator();
