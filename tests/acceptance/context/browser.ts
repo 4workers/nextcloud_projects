@@ -1,6 +1,7 @@
 import * as puppeteer from 'puppeteer';
 import config from '../config';
 import {BrowserContextConfig, Resolution} from '../types';
+import {User} from '../user';
 
 export class Browser {
 
@@ -12,11 +13,30 @@ export class Browser {
         this.config = config;
     }
 
-    init = async (test) => {
+    init = async () => {
         await this.resetBrowser();
     }
 
-    resetBrowser = async () => {
+    login = async (user) => {
+        await this.resetBrowser();
+        await Promise.all([
+            this.performLogin(user, this.pageBase, this.config.urlBase),
+        ]);
+    }
+
+    private performLogin = async (user: User, page: puppeteer.Page, baseUrl: string) => {
+        await page.bringToFront();
+        await page.goto(`${baseUrl}/index.php/login`, {waitUntil: 'networkidle0'});
+        //TODO: move to config
+        await page.type('#user', user.uid);
+        await page.type('#password', user.password);
+        const inputElement = await page.$('input[type=submit]');
+        await inputElement.click();
+        await page.waitForNavigation({waitUntil: 'networkidle2'});
+        return await page.waitForSelector('#header');
+    }
+
+    private resetBrowser = async () => {
         if (this.browser) {
             await this.browser.close();
         }
@@ -33,7 +53,12 @@ export class Browser {
         return this.config.resolutions;
     }
 
+    goto = async (url: string) => {
+        return this.pageBase.goto(url);
+    }
+
     static default() {
         return new Browser(config);
     }
+
 }
