@@ -1,5 +1,6 @@
 import {Project} from '../project';
 import axios, { AxiosBasicCredentials, AxiosRequestConfig, AxiosInstance } from 'axios'
+import {User} from '../user';
 export class Api {
 
     private connection: AxiosInstance;
@@ -23,6 +24,24 @@ export class Api {
         const data = response.data
         const url = response.headers['content-location']
         return new Project(data.id, data.name, project.projectId, url)
+    }
+
+    createUser = async (user: User): Promise<void> => {
+        await this.connection({
+            method: 'POST',
+            url: '/ocs/v1.php/cloud/users',
+            data: {
+                userId: user.uid,
+                password: 'password',
+            },
+        })
+    }
+
+    deleteUser = async (user: User): Promise<void> => {
+        await this.connection({
+            method: 'DELETE',
+            url: `/ocs/v1.php/cloud/users/${user.uid}`
+        })
     }
 
     static default (): Api {
